@@ -1,0 +1,132 @@
+const { pg_pool } = require('../database')
+const UserBuilder = require("../../helpers/builder/UserBuilder");
+
+/**
+* Creates User with the given data
+* @returns account created
+*/
+const signup = async (nickname, mail) => {
+	try {
+		
+		var query = `INSERT INTO usuarios(nickname, mail)
+		 values ('${nickname}', '${mail}')
+		 RETURNING idusuario, nickname, mail`;
+		const records = await pg_pool.query(query);
+		if (records.rows.length >= 1) {
+			let record = records.rows[0];
+
+			let user = new UserBuilder().buildWithRecord(record);
+			return user;
+		} else {
+			return null;
+		}
+	} catch (error) {
+		return null;
+	}
+};
+
+
+/**
+* Lookups for an account in the postgres database with the given account id
+* If not exist returns null
+* @returns account if exists else null
+*/
+const getUserByidusuario = async (uid) => {
+	try {
+
+		if (uid == undefined || uid.length < 1) {
+			return null
+		}
+		
+		var query = `SELECT * from usuarios a where a.idusuario = ${uid} `;
+		const records = await pg_pool.query(query);
+		if (records.rows.length >= 1) {
+			let record = records.rows[0];
+			return new UserBuilder().buildWithRecord(record);
+		} else {
+			return null;
+		}
+	} catch (error) {
+		return null;
+	}
+};
+
+
+/**
+* Lookups for an account in the postgres database with the given mail. 
+* If not exist returns null
+* @returns account if exists else null
+*/
+const getUserByMail = async (mail) => {
+	try {
+
+		if (mail == undefined || mail.length < 1) {
+			return null
+		}
+		
+		var query = `SELECT * from usuarios a where a.mail = '${mail}' `;
+		const records = await pg_pool.query(query);
+		if (records.rows.length >= 1) {
+			let record = records.rows[0];
+			return new UserBuilder().buildWithRecord(record);
+		} else {
+			return null;
+		}
+	} catch (error) {
+		return null;
+	}
+};
+
+/**
+* Lookups for an account in the postgres database with the given alias. 
+* If not exist returns null
+* @returns account if exists else null
+*/
+const getUserByNickname = async (nickname) => {
+	try {
+
+		if (nickname == undefined || nickname.length < 1) {
+			return null
+		}
+		
+		var query = `SELECT * from usuarios a where a.nickname = '${nickname}' `;
+		const records = await pg_pool.query(query);
+		if (records.rows.length >= 1) {
+			let record = records.rows[0];
+			return new UserBuilder().buildWithRecord(record);
+		} else {
+			return null;
+		}
+	} catch (error) {
+		return null;
+	}
+};
+
+
+/**
+* Updates user password if user exists with uid
+* @returns 
+*/
+const completeUserSignUp = async (uid, password, tipo_usuario) => {
+	try {
+		
+		var query = `UPDATE usuarios SET password = '${password}', habilitado = 'Si', tipo_usuario = '${tipo_usuario}' WHERE idusuario = '${uid}' `;
+		const records = await pg_pool.query(query);
+		if (records.rowCount >= 1) {
+			
+			return true
+		} else {
+			return false;
+		}
+	} catch (error) {
+		return false;
+	}
+};
+
+module.exports = {
+	signup,
+	getUserByidusuario,
+	getUserByMail,
+	getUserByNickname,
+	completeUserSignUp
+};

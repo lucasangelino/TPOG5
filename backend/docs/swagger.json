@@ -1,0 +1,558 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "recipes",
+      "version": "1.0.0"
+    },
+    "servers": [
+      {
+        "url": "http://localhost:8080"
+      }
+    ],
+    "tags": [
+      {
+        "name": "Auth"
+      },
+      {
+        "name": "Recetas"
+      },
+      {
+        "name": "Sugerencias"
+      },
+      {
+        "name": "Clases"
+      }
+    ],
+    "paths": {
+      "/auth/signup": {
+        "post": {
+          "tags": [
+            "Auth"
+          ],
+          "summary": "/auth/signup",
+          "requestBody": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string",
+                  "example": "{   \"firstName\": \"test\",   \"lastName\": \"test\",   \"email\":  \"test@uade.edu.ar\",   \"password\": \"123456\"}"
+                }
+              }
+            }
+          },
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "in": "header",
+              "schema": {
+                "type": "string"
+              },
+              "example": "application/json"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {}
+              }
+            }
+          }
+        },
+        "put": {
+          "tags": [
+            "Auth"
+          ],
+          "summary": "/auth/signup/complete",
+          "requestBody": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string",
+                  "example": "{\"firstName\": \"test\",    \"lastName\": \"test\",\"email\":  \"test@uade.edu.ar\",  \"password\": \"123456\"}"
+                }
+              }
+            }
+          },
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "in": "header",
+              "schema": {
+                "type": "string"
+              },
+              "example": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "in": "header",
+              "schema": {
+                "type": "string"
+              },
+              "example": "Bearer {{access_token}}"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {}
+              }
+            }
+          }
+        }
+      },
+      "/api/auth/login": {
+        "post": {
+          "tags": [
+            "Auth"
+          ],
+          "summary": "/auth/login",
+          "requestBody": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string",
+                  "example": "{   \"email\":  \"test@uade.edu.ar\",   \"password\": \"123456\"}"
+                }
+              }
+            }
+          },
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "in": "header",
+              "schema": {
+                "type": "string"
+              },
+              "example": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "in": "header",
+              "schema": {
+                "type": "string"
+              },
+              "example": "Bearer {{access_token}}"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {}
+              }
+            }
+          }
+        }
+      },
+      "/auth/changepassword": {
+        "post": {
+          "tags": [
+            "Auth"
+          ],
+          "summary": "/auth/changepassword",
+          "requestBody": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string",
+                  "example": "{   \"firstName\": \"test\",   \"lastName\": \"test\",   \"email\":  \"test@uade.edu.ar\",   \"password\": \"123456\"}"
+                }
+              }
+            }
+          },
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "in": "header",
+              "schema": {
+                "type": "string"
+              },
+              "example": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "in": "header",
+              "schema": {
+                "type": "string"
+              },
+              "example": "Bearer {{access_token}}"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {}
+              }
+            }
+          }
+        }
+      },
+      "/api/receta": {
+        "get": {
+          "tags": [
+            "Recetas"
+          ],
+          "summary": "/receta",
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "in": "header",
+              "schema": {
+                "type": "string"
+              },
+              "example": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "in": "header",
+              "schema": {
+                "type": "string"
+              },
+              "example": "Bearer {{access_token}}"
+            },
+            {
+              "name": "page",
+              "in": "query",
+              "schema": {
+                "type": "integer"
+              },
+              "example": "1"
+            },
+            {
+              "name": "limit",
+              "in": "query",
+              "schema": {
+                "type": "integer"
+              },
+              "example": "5"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {}
+              }
+            }
+          }
+        },
+        "put": {
+          "tags": [
+            "Recetas"
+          ],
+          "summary": "/receta",
+          "requestBody": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string",
+                  "example": "{   \"nombre\": \"\",   \"tipo_receta\": \"\",   \"descripcion\":\"\",   \"photos\": [\"\"],   \"ingredientes\": [\"\"],   \"cantidades\":[\"\"],   \"steps\": [       {           \"id\": 1,           \"descripcion\":\"\",           \"recursos\": [\"\"]       },       {           \"id\": 2,           \"descripcion\":\"\",       }   ]}\""
+                }
+              }
+            }
+          },
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "in": "header",
+              "schema": {
+                "type": "string"
+              },
+              "example": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "in": "header",
+              "schema": {
+                "type": "string"
+              },
+              "example": "Bearer {{access_token}}"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {}
+              }
+            }
+          }
+        }
+      },
+      "/api/receta/multiplo": {
+        "get": {
+          "tags": [
+            "Recetas"
+          ],
+          "summary": "/receta/multiplo",
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "in": "header",
+              "schema": {
+                "type": "string"
+              },
+              "example": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "in": "header",
+              "schema": {
+                "type": "string"
+              },
+              "example": "Bearer {{access_token}}"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {}
+              }
+            }
+          }
+        }
+      },
+      "/api/receta/save/{id}": {
+        "post": {
+          "tags": [
+            "Recetas"
+          ],
+          "summary": "/receta/save/:id",
+          "requestBody": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string",
+                  "example": "\"{}\""
+                }
+              }
+            }
+          },
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "in": "header",
+              "schema": {
+                "type": "string"
+              },
+              "example": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "in": "header",
+              "schema": {
+                "type": "string"
+              },
+              "example": "Bearer {{access_token}}"
+            },
+            {
+              "name": "id",
+              "in": "path",
+              "schema": {
+                "type": "string"
+              },
+              "required": true
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {}
+              }
+            }
+          }
+        }
+      },
+      "/receta/review": {
+        "post": {
+          "tags": [
+            "Recetas"
+          ],
+          "summary": "/receta/review",
+          "requestBody": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string",
+                  "example": "{\"receta_id\": \"6370ef7560b0238a0ce79f00\",  \"type\": \"positive\", \"comment\": \"asdasda\"}"
+                }
+              }
+            }
+          },
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "in": "header",
+              "schema": {
+                "type": "string"
+              },
+              "example": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "in": "header",
+              "schema": {
+                "type": "string"
+              },
+              "example": "Bearer {{access_token}}"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {}
+              }
+            }
+          }
+        },
+        "patch": {
+          "tags": [
+            "Recetas"
+          ],
+          "summary": "/receta/review",
+          "requestBody": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string",
+                  "example": "{\"receta_id\": \"636c61736530303030303034\",  \"comment_id\": \"637b99fe6f5b164eec04821e\",\"new_state\": \"bloqueada\", \"state_reason\": \"comentario ofensivo!\"}"
+                }
+              }
+            }
+          },
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "in": "header",
+              "schema": {
+                "type": "string"
+              },
+              "example": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "in": "header",
+              "schema": {
+                "type": "string"
+              },
+              "example": "Bearer {{access_token}}"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {}
+              }
+            }
+          }
+        }
+      },
+      "/sugerencia": {
+        "get": {
+          "tags": [
+            "Sugerencias"
+          ],
+          "summary": "/sugerencia",
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "in": "header",
+              "schema": {
+                "type": "string"
+              },
+              "example": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "in": "header",
+              "schema": {
+                "type": "string"
+              },
+              "example": "Bearer {{access_token}}"
+            },
+            {
+              "name": "page",
+              "in": "query",
+              "schema": {
+                "type": "integer"
+              },
+              "example": "1"
+            },
+            {
+              "name": "limit",
+              "in": "query",
+              "schema": {
+                "type": "integer"
+              },
+              "example": "5"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {}
+              }
+            }
+          }
+        }
+      },
+      "/clase": {
+        "get": {
+          "tags": [
+            "Clases"
+          ],
+          "summary": "/clase",
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "in": "header",
+              "schema": {
+                "type": "string"
+              },
+              "example": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "in": "header",
+              "schema": {
+                "type": "string"
+              },
+              "example": "Bearer {{access_token}}"
+            },
+            {
+              "name": "page",
+              "in": "query",
+              "schema": {
+                "type": "integer"
+              },
+              "example": "1"
+            },
+            {
+              "name": "limit",
+              "in": "query",
+              "schema": {
+                "type": "integer"
+              },
+              "example": "5"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {}
+              }
+            }
+          }
+        }
+      }
+    }
+  }
