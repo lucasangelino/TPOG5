@@ -64,7 +64,7 @@ const getUserByMail = async (mail) => {
 			return null
 		}
 		
-		var query = `SELECT * from usuarios a where a.mail = '${mail}' `;
+		var query = `SELECT * from usuarios where mail = '${mail}' `;
 		const records = await pg_pool.query(query);
 		if (records.rows.length >= 1) {
 			let record = records.rows[0];

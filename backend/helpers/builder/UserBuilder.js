@@ -21,6 +21,11 @@ class UserBuilder {
     return this;
   } 
 
+  setPassword(password) {
+    this.entity.password = password;
+    return this;
+  } 
+
   
   setNombre(nombre) {
     this.entity.nombre = nombre;
@@ -51,6 +56,7 @@ class UserBuilder {
     return new UserBuilder()
 			.setidusuario(record.idusuario)
 			.setMail(record.mail)
+      .setPassword(record.password)
 			.setNickname(record.nickname)
 			.setHabilitado(false)
 			.build();

@@ -55,6 +55,7 @@ const signup = async (req, res = response) => {
       },
     });
 
+    // TODO axel: hacer que sea un token de un solo uso
     const token = await generateJWT({idusuario: user.idusuario});
 
     const mailOptions = {
@@ -150,11 +151,11 @@ const completeSignUp = async (req, res = response) => {
 
 
 const login = async (req, res = response) => {
-  const { email, password } = req.body;
+  const { mail, password } = req.body;
 
   try {
 
-    const usuario = await UserRepository.getUserByMail(email);
+    const usuario = await UserRepository.getUserByMail(mail);
     if (!usuario) { 
       return res.status(400).json({
         ok: false,
@@ -162,8 +163,8 @@ const login = async (req, res = response) => {
       });
     }
 
-    //const validPassword = bcrypt.compareSync(password, usuario.getPassword());
-    const validPassword = password == usuario.getPassword();
+    // TODO axel activar hash comparison
+    const validPassword = bcrypt.compareSync(password, usuario.getPassword());
     if (!validPassword) {
       return res.status(400).json({
         ok: false,
@@ -175,7 +176,6 @@ const login = async (req, res = response) => {
     const token = await generateJWT(usuario.idusuario);
     return res.json({
       ok: true,
-      user: usuario,
       token,
     });
   } catch (error) {
@@ -190,12 +190,10 @@ const renew = async (req, res = response) => {
   const { uid } = req;
 
   const token = await generateJWT(uid);
-  const user = await UserRepository.getUserByidusuario(uid);
 
   return res.json({
     ok: true,
     token,
-    user: user,
   });
 };
 
