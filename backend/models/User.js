@@ -1,7 +1,7 @@
 class User {
 	
 	constructor() {
-		this.idusuario = null
+		this.idusuario = 0
 		this.nombre = ""
 		this.mail = ""
 		this.nickname = ""

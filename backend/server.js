@@ -21,6 +21,7 @@ class Server {
     // Body Parser
     this.app.use(express.json());
     this.app.use("/auth", require("./router/auth"));
+    this.app.use("/receta", require("./router/recetas"));
   }
 
   execute() {

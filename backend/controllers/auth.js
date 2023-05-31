@@ -1,5 +1,11 @@
 var nodemailer = require("nodemailer");
 const { google } = require("googleapis");
+const { response } = require("express");
+const bcrypt = require("bcrypt");
+const { generateJWT, verifyJWT } = require("../helpers/jwt");
+const UserRepository = require("../db/repository/UserRepository");
+
+var constants = require("../common/constants");
 
 const oAuth2Client = new google.auth.OAuth2(
   process.env.GMAIL_API_KEY,
@@ -10,15 +16,6 @@ const oAuth2Client = new google.auth.OAuth2(
 oAuth2Client.setCredentials({
   refresh_token: process.env.GMAIL_API_REFRESH_TOKEN,
 });
-
-const { response } = require("express");
-const bcrypt = require("bcrypt");
-const { generateJWT, verifyJWT } = require("../helpers/jwt");
-const UserRepository = require("../db/repository/UserRepository");
-
-var constants = require("../common/constants");
-
-const SALT_ROUNDS = 6;
 
 const signup = async (req, res = response) => {
   try {
@@ -125,7 +122,7 @@ const completeSignUp = async (req, res = response) => {
     }
 
 
-    let hash = await bcrypt.hash(password, SALT_ROUNDS);
+    let hash = await bcrypt.hash(password, constants.SALT_ROUNDS);
 
     let bret = await UserRepository.completeUserSignUp(decoded.idusuario, hash, tipo_usuario);
     if (!bret) {

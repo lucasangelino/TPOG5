@@ -98,3 +98,58 @@ CREATE TABLE multimedia(
 	urlContenido VARCHAR(300),
 	CONSTRAINT fk_multimedia_pasos foreign key (idPaso) references pasos
 );
+
+INSERT INTO tipos(idTipo, descripcion) 
+OVERRIDING SYSTEM VALUE
+VALUES(1, 'Pastas');
+
+INSERT INTO usuarios(idusuario, mail, nickname, habilitado, nombre, password, avatar, tipo_usuario) 
+OVERRIDING SYSTEM VALUE
+VALUES(1, 'alumno@uade.edu.ar', 'alumno', 'Si', 'AlumnoUade', '$2b$06$Q1ULFcGYfOAIvVcLEBMDbepppkD5iw8JkhmvdEhW4JgL9HvOwVxmi', ' ', 'Alumno');
+
+INSERT INTO recetas(idusuario, nombre, descripcion,foto,porciones,cantidadPersonas,idTipo) VALUES(1, 'Fideo con pesto', 'Fideos con pesto', '', 1, 1, 1);
+
+INSERT INTO ingredientes(idIngrediente, nombre) 
+OVERRIDING SYSTEM VALUE
+VALUES(1, 'Spaghetti');
+
+INSERT INTO ingredientes(idIngrediente, nombre) 
+OVERRIDING SYSTEM VALUE
+VALUES(2, 'Tomate');
+
+INSERT INTO ingredientes(idIngrediente, nombre) 
+OVERRIDING SYSTEM VALUE
+VALUES(3, 'Agua Hirviendo');
+
+INSERT INTO ingredientes(idIngrediente, nombre) 
+OVERRIDING SYSTEM VALUE
+VALUES(4, 'Queso en Hebras');
+
+INSERT INTO unidades(idUnidad, descripcion) 
+OVERRIDING SYSTEM VALUE
+VALUES(1, 'gramo');
+
+INSERT INTO unidades(idUnidad, descripcion) 
+OVERRIDING SYSTEM VALUE
+VALUES(2, 'unidad');
+
+INSERT INTO unidades(idUnidad, descripcion) 
+OVERRIDING SYSTEM VALUE
+VALUES(3, 'cm3');
+
+
+INSERT INTO utilizados(idUtilizado, idReceta, idIngrediente, cantidad, idUnidad, observaciones) 
+OVERRIDING SYSTEM VALUE
+VALUES(1, 1, 1, 100, 1, '100 gramos de Fideos Spaghetti');
+
+INSERT INTO utilizados(idUtilizado, idReceta, idIngrediente, cantidad, idUnidad, observaciones) 
+OVERRIDING SYSTEM VALUE
+VALUES(2, 1, 2, 2, 2, '2 unidades de tomate');
+
+INSERT INTO utilizados(idUtilizado, idReceta, idIngrediente, cantidad, idUnidad, observaciones) 
+OVERRIDING SYSTEM VALUE
+VALUES(3, 1, 3, 500, 3, '500 cm3 de agua hirviendo');
+
+INSERT INTO utilizados(idUtilizado, idReceta, idIngrediente, cantidad, idUnidad, observaciones) 
+OVERRIDING SYSTEM VALUE
+VALUES(4, 1, 4, 50, 1, '50 gramos de queso en hebras');
