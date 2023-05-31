@@ -4,7 +4,7 @@ import {SafeAreaView, Text, StyleSheet} from 'react-native';
 function Load({navigation}) {
   useEffect(() => {
     const timer = setTimeout(() => {
-      navigation.navigate('Login');
+      navigation.navigate('Landing');
     }, 2000);
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
