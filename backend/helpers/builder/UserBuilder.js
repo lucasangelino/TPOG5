@@ -6,43 +6,43 @@ class UserBuilder {
     this.entity = new User();
   }
 
-  setidusuario(idusuario) {
+  idusuario(idusuario) {
     this.entity.idusuario = idusuario;
     return this;
   } 
 
-  setMail(mail) {
+  mail(mail) {
     this.entity.mail = mail;
     return this;
   }
 
-  setNickname(nickname) {
+  nickname(nickname) {
     this.entity.nickname = nickname;
     return this;
   } 
 
-  setPassword(password) {
+  password(password) {
     this.entity.password = password;
     return this;
   } 
 
   
-  setNombre(nombre) {
+  nombre(nombre) {
     this.entity.nombre = nombre;
     return this;
   }
 
-  setAvatar(avatar) {
+  avatar(avatar) {
     this.entity.avatar = avatar;
     return this;
   }
 
-  setTipoUsuario(tipo_usuario) {
+  tipo_usuario(tipo_usuario) {
     this.entity.tipo_usuario = tipo_usuario;
     return this;
   }
 
-  setHabilitado(habilitado) {
+  habilitado(habilitado) {
     this.entity.habilitado = habilitado;
     return this;
   }
@@ -54,11 +54,11 @@ class UserBuilder {
   buildWithRecord(record) {
 
     return new UserBuilder()
-			.setidusuario(record.idusuario)
-			.setMail(record.mail)
-      .setPassword(record.password)
-			.setNickname(record.nickname)
-			.setHabilitado(false)
+			.idusuario(record.idusuario)
+			.mail(record.mail)
+      .password(record.password)
+			.nickname(record.nickname)
+			.habilitado(false)
 			.build();
 
   }
