@@ -1,24 +1,22 @@
 import React from 'react';
-import {Text, StyleSheet, View} from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import Navbar from '../components/Navbar';
+import {View, TextInput, Text, StyleSheet} from 'react-native';
 
 const Home = ({navigation}) => {
-  <SafeAreaView>
-    <Navbar />
-    <View style={styles.mainContainer}>
-      <Text style={styles.text}>Homeaaaaa</Text>
+  return (
+    <View style={styles.container}>
+      <Text style={styles.logo}>HOME</Text>
+      <View style={styles.form}>
+        <TextInput style={styles.input} placeholder="Email" />
+      </View>
     </View>
-  </SafeAreaView>;
+  );
 };
 
 const styles = StyleSheet.create({
-  mainContainer: {
+  container: {
     flex: 1,
-    backgroundColor: '#6D8C00',
-  },
-  text: {
-    color: '#000',
+    backgroundColor: '#000',
   },
 });
+
 export default Home;

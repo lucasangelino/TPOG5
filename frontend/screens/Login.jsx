@@ -36,7 +36,7 @@ const LoginScreen = ({navigation}) => {
 
         <View style={styles.linkContainer}>
           <TouchableOpacity onPress={() => navigation.navigate('Recover')}>
-            <Text style={styles.link}>¿Olvidaste tu contraseña?</Text>
+            <Text style={styles.link}>¿Olvidaste tu cccccccccccontraseña?</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate('Register')}>
             <Text style={styles.link}>Crear nueva cuenta</Text>
