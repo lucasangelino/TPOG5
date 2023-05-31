@@ -9,7 +9,7 @@ const RecetaRepository = require("../db/repository/RecetaRepository.js");
 const getRecetas = async (req, res) => {
   try {
 
-    var skip = req.query.page ? req.query.page : 1;
+    var skip = req.query.skip ? req.query.skip : 0;
 		var limit = req.query.limit ? req.query.limit : 10;
 
     const body = req.body;

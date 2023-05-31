@@ -107,8 +107,8 @@ INSERT INTO usuarios(idusuario, mail, nickname, habilitado, nombre, password, av
 OVERRIDING SYSTEM VALUE
 VALUES(1, 'alumno@uade.edu.ar', 'alumno', 'Si', 'AlumnoUade', '$2b$06$Q1ULFcGYfOAIvVcLEBMDbepppkD5iw8JkhmvdEhW4JgL9HvOwVxmi', ' ', 'Alumno');
 
-INSERT INTO recetas(idusuario, nombre, descripcion,foto,porciones,cantidadPersonas,idTipo) VALUES(1, 'Fideo con pesto', 'Fideos con pesto', '', 1, 1, 1);
 
+-- Ingredientes
 INSERT INTO ingredientes(idIngrediente, nombre) 
 OVERRIDING SYSTEM VALUE
 VALUES(1, 'Spaghetti');
@@ -125,6 +125,16 @@ INSERT INTO ingredientes(idIngrediente, nombre)
 OVERRIDING SYSTEM VALUE
 VALUES(4, 'Queso en Hebras');
 
+INSERT INTO ingredientes(idIngrediente, nombre) 
+OVERRIDING SYSTEM VALUE
+VALUES(5, 'Pesto');
+
+INSERT INTO ingredientes(idIngrediente, nombre) 
+OVERRIDING SYSTEM VALUE
+VALUES(6, 'Manteca');
+
+
+-- Unidades
 INSERT INTO unidades(idUnidad, descripcion) 
 OVERRIDING SYSTEM VALUE
 VALUES(1, 'gramo');
@@ -138,13 +148,17 @@ OVERRIDING SYSTEM VALUE
 VALUES(3, 'cm3');
 
 
-INSERT INTO utilizados(idUtilizado, idReceta, idIngrediente, cantidad, idUnidad, observaciones) 
-OVERRIDING SYSTEM VALUE
-VALUES(1, 1, 1, 100, 1, '100 gramos de Fideos Spaghetti');
+-- Spaghettis con Pesto
+INSERT INTO recetas(idusuario, nombre, descripcion,foto,porciones,cantidadPersonas,idTipo) 
+VALUES(1, 'Spaghetti con pesto', 'Spaghettis con pesto', '', 1, 1, 1);
 
 INSERT INTO utilizados(idUtilizado, idReceta, idIngrediente, cantidad, idUnidad, observaciones) 
 OVERRIDING SYSTEM VALUE
-VALUES(2, 1, 2, 2, 2, '2 unidades de tomate');
+VALUES(1, 1, 1, 100, 1, '100 gramos de Spaghettis Spaghetti');
+
+INSERT INTO utilizados(idUtilizado, idReceta, idIngrediente, cantidad, idUnidad, observaciones) 
+OVERRIDING SYSTEM VALUE
+VALUES(2, 1, 5, 20, 1, '20 gramos de Pesto');
 
 INSERT INTO utilizados(idUtilizado, idReceta, idIngrediente, cantidad, idUnidad, observaciones) 
 OVERRIDING SYSTEM VALUE
@@ -153,3 +167,56 @@ VALUES(3, 1, 3, 500, 3, '500 cm3 de agua hirviendo');
 INSERT INTO utilizados(idUtilizado, idReceta, idIngrediente, cantidad, idUnidad, observaciones) 
 OVERRIDING SYSTEM VALUE
 VALUES(4, 1, 4, 50, 1, '50 gramos de queso en hebras');
+
+
+-- Spaghettis con Fileto
+INSERT INTO recetas(idusuario, nombre, descripcion,foto,porciones,cantidadPersonas,idTipo) 
+VALUES(1, 'Spaghetti con Fileto', 'Spaghettis con Fileto', '', 1, 1, 1);
+
+INSERT INTO utilizados(idUtilizado, idReceta, idIngrediente, cantidad, idUnidad, observaciones) 
+OVERRIDING SYSTEM VALUE
+VALUES(5, 2, 1, 100, 1, '100 gramos de Spaghettis Spaghetti');
+
+INSERT INTO utilizados(idUtilizado, idReceta, idIngrediente, cantidad, idUnidad, observaciones) 
+OVERRIDING SYSTEM VALUE
+VALUES(6, 2, 2, 2, 2, '2 unidades de tomate');
+
+INSERT INTO utilizados(idUtilizado, idReceta, idIngrediente, cantidad, idUnidad, observaciones) 
+OVERRIDING SYSTEM VALUE
+VALUES(7, 2, 3, 500, 3, '500 cm3 de agua hirviendo');
+
+INSERT INTO utilizados(idUtilizado, idReceta, idIngrediente, cantidad, idUnidad, observaciones) 
+OVERRIDING SYSTEM VALUE
+VALUES(8, 2, 6, 50, 1, '50 gramos de manteca');
+
+-- Sorrentinos de Ricota
+INSERT INTO recetas(idusuario, nombre, descripcion,foto,porciones,cantidadPersonas,idTipo) 
+VALUES(1, 'Sorrentinos de Ricota', 'Sorrentinos de Ricota', '', 1, 1, 1);
+
+-- Sorrentinos de Verdura
+INSERT INTO recetas(idusuario, nombre, descripcion,foto,porciones,cantidadPersonas,idTipo) 
+VALUES(1, 'Sorrentinos de Verdura', 'Sorrentinos de Verdura', '', 1, 1, 1);
+
+-- Sorrentinos de Salmon
+INSERT INTO recetas(idusuario, nombre, descripcion,foto,porciones,cantidadPersonas,idTipo) 
+VALUES(1, 'Sorrentinos de Salmon', 'Sorrentinos de Salmon', '', 1, 1, 1);
+
+-- Macarrones con Bolognesa
+INSERT INTO recetas(idusuario, nombre, descripcion,foto,porciones,cantidadPersonas,idTipo) 
+VALUES(1, 'Macarrones con Bolognesa', 'Macarrones con Bolognesa', '', 1, 1, 1);
+
+-- Macarrones con Queso
+INSERT INTO recetas(idusuario, nombre, descripcion,foto,porciones,cantidadPersonas,idTipo) 
+VALUES(1, 'Macarrones con Queso', 'Macarrones con Queso', '', 1, 1, 1);
+
+-- Canelones
+INSERT INTO recetas(idusuario, nombre, descripcion,foto,porciones,cantidadPersonas,idTipo) 
+VALUES(1, 'Canelones', 'Canelones', '', 1, 1, 1);
+
+-- Tallarines
+INSERT INTO recetas(idusuario, nombre, descripcion,foto,porciones,cantidadPersonas,idTipo) 
+VALUES(1, 'Tallarines', 'Tallarines', '', 1, 1, 1);
+
+-- Lasagna
+INSERT INTO recetas(idusuario, nombre, descripcion,foto,porciones,cantidadPersonas,idTipo) 
+VALUES(1, 'Lasagna', 'Lasagna', '', 1, 1, 1);

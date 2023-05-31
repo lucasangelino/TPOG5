@@ -64,13 +64,17 @@ const getRecetas = async ({receta_id, usuario_id, nombre, tipo_receta, rating_mi
 		}
 
 		// TODO validate field exists
-		// no puedo hacer raplce all de los apostrofes
-		//order_by = order_by.replaceAll("'", "");
-		//order_type = order_type.replaceAll("'", "");
-		//if(order_by && order_type) {
-		//	query = query + ` ORDER BY '${order_by}' '${order_type}' `
-		//}
+		if(order_by && order_type) {
+			query = query + ` ORDER BY ${order_by} ${order_type} `
+		}
 
+		if (skip) {
+			query = query + ` OFFSET ${skip} `
+		}
+
+		if (limit) {
+			query = query + ` LIMIT ${limit} `
+		}
 
 		const records = await pg_pool.query(query);
 
