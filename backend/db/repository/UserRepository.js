@@ -5,11 +5,11 @@ const UserBuilder = require("../../helpers/builder/UserBuilder");
 * Creates User with the given data
 * @returns account created
 */
-const signup = async (nickname, mail) => {
+const signup = async (nickname, mail, nombre, hash, tipo_usuario) => {
 	try {
 		
-		var query = `INSERT INTO usuarios(nickname, mail)
-		 values ('${nickname}', '${mail}')
+		var query = `INSERT INTO usuarios(nickname, mail, nombre, password, tipo_usuario)
+		 values ('${nickname}', '${mail}', '${nombre}', '${hash}', '${tipo_usuario}')
 		 RETURNING idusuario, nickname, mail`;
 		const records = await pg_pool.query(query);
 		if (records.rows.length >= 1) {
@@ -107,10 +107,10 @@ const getUserByNickname = async (nickname) => {
 * Updates user password if user exists with uid
 * @returns 
 */
-const completeUserSignUp = async (uid, password, tipo_usuario) => {
+const completeUserSignUp = async (uid) => {
 	try {
 		
-		var query = `UPDATE usuarios SET password = '${password}', habilitado = 'Si', tipo_usuario = '${tipo_usuario}' WHERE idusuario = '${uid}' `;
+		var query = `UPDATE usuarios SET habilitado = 'Si' WHERE idusuario = '${uid}' `;
 		const records = await pg_pool.query(query);
 		if (records.rowCount >= 1) {
 			

@@ -20,7 +20,18 @@ oAuth2Client.setCredentials({
 const signup = async (req, res = response) => {
   try {
     
-    const { nickname, mail } = req.body;
+    const { nickname, mail, nombre, password, repeatPassword, tipo_usuario} = req.body;
+    if (!['Visitante', 'Alumno'].includes(tipo_usuario)) {
+      return res
+      .status(400)
+      .json({ err: `'${tipo_usuario} no es un tipo de usuario valido'`});
+    }
+
+    if (password !== repeatPassword) {
+      return res
+      .status(401)
+      .json({ err: "Las contrasenas no coinciden" }); 
+    }
 
     // buscamos por mail
     let user = await UserRepository.getUserByMail(mail);
@@ -40,8 +51,8 @@ const signup = async (req, res = response) => {
       });
     }
 
-    //let encryptedPassword = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
-    user = await UserRepository.signup(nickname, mail);
+    let hash = await bcrypt.hash(password, constants.SALT_ROUNDS);
+    user = await UserRepository.signup(nickname, mail, nombre, hash, tipo_usuario);
 
     const accessToken = await oAuth2Client.getAccessToken();
     const transport = nodemailer.createTransport({
@@ -62,7 +73,7 @@ const signup = async (req, res = response) => {
       text:
         `Hola! Te escribimos de Recetas. \n
         has registrado una cuenta con este mail, si no fuiste tu, ignoralo. \n
-        Sigue este link: http://localhost:8080/signup/complete/` +     token,
+        Sigue este link: http://localhost:8080/signup/complete?token=` +     token,
     };
 
     try {
@@ -87,17 +98,8 @@ const signup = async (req, res = response) => {
 
 const completeSignUp = async (req, res = response) => {
   try {
-  const { firstName, lastName, fecNac, nacionalidad, password, repeatPassword, tipo_usuario} = req.body;
-
+  
   const token = req.query.token;
-
-  if (!['Visitante', 'Alumno'].includes(tipo_usuario)) {
-    return res
-    .status(400)
-    .json({ err: `'${tipo_usuario} no es un tipo de usuario valido'`});
-  }
-
-
 
   let decoded = await verifyJWT(token);
    if (decoded.err) { 
@@ -115,20 +117,11 @@ const completeSignUp = async (req, res = response) => {
 
     }
 
-    if (password !== repeatPassword) {
-      return res
-      .status(401)
-      .json({ err: "Las contrasenas no coinciden" }); 
-    }
-
-
-    let hash = await bcrypt.hash(password, constants.SALT_ROUNDS);
-
-    let bret = await UserRepository.completeUserSignUp(decoded.idusuario, hash, tipo_usuario);
+    let bret = await UserRepository.completeUserSignUp(decoded.idusuario);
     if (!bret) {
       return res.status(500).json({
         ok: false,
-        message: "Unexpected error setting password",
+        message: "Unexpected error completing sign up",
       });
     }
 
@@ -162,7 +155,7 @@ const login = async (req, res = response) => {
 
     // TODO axel activar hash comparison
     const validPassword = bcrypt.compareSync(password, usuario.getPassword());
-    if (!validPassword) {
+    if (!validPassword || !usuario.getHabilitado()) {
       return res.status(400).json({
         ok: false,
         message: "User or password incorrect",
