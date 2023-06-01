@@ -29,6 +29,9 @@ CREATE TABLE recetas(
 	porciones int,
 	cantidadPersonas int,
 	idTipo int,
+	rating int,
+	positiveCount int,
+	negativeCount int,
 	CONSTRAINT fk_recetas_usuarios foreign key (idusuario) references usuarios,
 	CONSTRAINT fk_recetas_tipos foreign key (idTipo) references tipos
 );
@@ -149,8 +152,8 @@ VALUES(3, 'cm3');
 
 
 -- Spaghettis con Pesto
-INSERT INTO recetas(idusuario, nombre, descripcion,foto,porciones,cantidadPersonas,idTipo) 
-VALUES(1, 'Spaghetti con pesto', 'Spaghettis con pesto', '', 1, 1, 1);
+INSERT INTO recetas(idusuario, nombre, descripcion,foto,porciones,cantidadPersonas,idTipo, rating, positiveCount, negativeCount) 
+VALUES(1, 'Spaghetti con pesto', 'Spaghettis con pesto', '', 1, 1, 1, 5, 499, 0);
 
 INSERT INTO utilizados(idUtilizado, idReceta, idIngrediente, cantidad, idUnidad, observaciones) 
 OVERRIDING SYSTEM VALUE
@@ -170,8 +173,8 @@ VALUES(4, 1, 4, 50, 1, '50 gramos de queso en hebras');
 
 
 -- Spaghettis con Fileto
-INSERT INTO recetas(idusuario, nombre, descripcion,foto,porciones,cantidadPersonas,idTipo) 
-VALUES(1, 'Spaghetti con Fileto', 'Spaghettis con Fileto', '', 1, 1, 1);
+INSERT INTO recetas(idusuario, nombre, descripcion,foto,porciones,cantidadPersonas,idTipo, rating, positiveCount, negativeCount) 
+VALUES(1, 'Spaghetti con Fileto', 'Spaghettis con Fileto', '', 1, 1, 1, 5, 500, 0);
 
 INSERT INTO utilizados(idUtilizado, idReceta, idIngrediente, cantidad, idUnidad, observaciones) 
 OVERRIDING SYSTEM VALUE
@@ -190,8 +193,8 @@ OVERRIDING SYSTEM VALUE
 VALUES(8, 2, 6, 50, 1, '50 gramos de manteca');
 
 -- Sorrentinos de Ricota
-INSERT INTO recetas(idusuario, nombre, descripcion,foto,porciones,cantidadPersonas,idTipo) 
-VALUES(1, 'Sorrentinos de Ricota', 'Sorrentinos de Ricota', '', 1, 1, 1);
+INSERT INTO recetas(idusuario, nombre, descripcion,foto,porciones,cantidadPersonas,idTipo, rating, positiveCount, negativeCount) 
+VALUES(1, 'Sorrentinos de Ricota', 'Sorrentinos de Ricota', '', 1, 1, 1, 5, 200, 0);
 
 -- Sorrentinos de Verdura
 INSERT INTO recetas(idusuario, nombre, descripcion,foto,porciones,cantidadPersonas,idTipo) 

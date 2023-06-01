@@ -9,6 +9,9 @@ class Receta {
 		this.porciones = 0
 		this.cantidadPersonas = 0
 		this.idTipo = 0
+		this.rating = 0
+		this.positiveCount = 0
+		this.negativeCount = 0
 	}
 
 	getIdReceta() {
@@ -41,6 +44,18 @@ class Receta {
 
     getIdTipo() {
         return this.idTipo
+    }
+
+	getRating() {
+        return this.rating
+    }
+
+	getPositiveCount() {
+        return this.positiveCount
+    }
+
+	getNegativeCount() {
+        return this.negativeCount
     }
 }
 

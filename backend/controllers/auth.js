@@ -153,7 +153,6 @@ const login = async (req, res = response) => {
       });
     }
 
-    // TODO axel activar hash comparison
     const validPassword = bcrypt.compareSync(password, usuario.getPassword());
     if (!validPassword || !usuario.getHabilitado()) {
       return res.status(400).json({
