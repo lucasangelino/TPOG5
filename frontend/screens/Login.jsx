@@ -10,8 +10,22 @@ import {
 const LoginScreen = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState(null);
 
-  const handleLogin = () => navigation.navigate('Home');
+  const handleLogin = () => {
+    const res = fetch('http://localhost:8080/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({email, password}),
+    });
+    if (res.status === 200) {
+      navigation.navigate('Home');
+    } else {
+      setError(res.message);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -36,7 +50,7 @@ const LoginScreen = ({navigation}) => {
 
         <View style={styles.linkContainer}>
           <TouchableOpacity onPress={() => navigation.navigate('Recover')}>
-            <Text style={styles.link}>¿Olvidaste tu cccccccccccontraseña?</Text>
+            <Text style={styles.link}>¿Olvidaste tu contraseña?</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate('Register')}>
             <Text style={styles.link}>Crear nueva cuenta</Text>

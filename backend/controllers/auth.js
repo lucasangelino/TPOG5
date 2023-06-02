@@ -19,7 +19,6 @@ oAuth2Client.setCredentials({
 
 const signup = async (req, res = response) => {
   try {
-    
     const { nickname, mail } = req.body;
 
     // buscamos por mail
@@ -53,7 +52,7 @@ const signup = async (req, res = response) => {
     });
 
     // TODO axel: hacer que sea un token de un solo uso
-    const token = await generateJWT({idusuario: user.idusuario});
+    const token = await generateJWT({ idusuario: user.idusuario });
 
     const mailOptions = {
       ...constants.mailoptions,
@@ -62,17 +61,22 @@ const signup = async (req, res = response) => {
       text:
         `Hola! Te escribimos de Recetas. \n
         has registrado una cuenta con este mail, si no fuiste tu, ignoralo. \n
-        Sigue este link: http://localhost:8080/signup/complete/` +     token,
+        Sigue este link: http://localhost:8080/signup/complete/` + token,
     };
 
     try {
       const result = await transport.sendMail(mailOptions);
 
       if (result.accepted.length > 0) {
-       return res.status(200).json({"result": "ok", "message": "Revisa tu correo para completar el registro"});
+        return res.status(200).json({
+          result: "ok",
+          message: "Revisa tu correo para completar el registro",
+        });
       }
 
-      return res.status(500).json({"result": "error", "message": result.response});
+      return res
+        .status(500)
+        .json({ result: "error", message: result.response });
     } catch (error) {
       console.log(error);
       return json.send(error);
@@ -87,57 +91,56 @@ const signup = async (req, res = response) => {
 
 const completeSignUp = async (req, res = response) => {
   try {
-  const { firstName, lastName, fecNac, nacionalidad, password, repeatPassword, tipo_usuario} = req.body;
+    const {
+      firstName,
+      lastName,
+      fecNac,
+      nacionalidad,
+      password,
+      repeatPassword,
+      tipo_usuario,
+    } = req.body;
 
-  const token = req.query.token;
+    const token = req.query.token;
 
-  if (!['Visitante', 'Alumno'].includes(tipo_usuario)) {
-    return res
-    .status(400)
-    .json({ err: `'${tipo_usuario} no es un tipo de usuario valido'`});
-  }
-
-
-
-  let decoded = await verifyJWT(token);
-   if (decoded.err) { 
-    return res
-      .status(401)
-      .json({ err: "error decrypt token" });
-  } 
-
-
-  UserRepository.getUserByidusuario(decoded.idusuario).then(async (user) => {
-    if (!user) {
+    if (!["Visitante", "Alumno"].includes(tipo_usuario)) {
       return res
-        .status(401)
-        .json({ err: "no existe el usuario" });
-
+        .status(400)
+        .json({ err: `'${tipo_usuario} no es un tipo de usuario valido'` });
     }
 
-    if (password !== repeatPassword) {
-      return res
-      .status(401)
-      .json({ err: "Las contrasenas no coinciden" }); 
+    let decoded = await verifyJWT(token);
+    if (decoded.err) {
+      return res.status(401).json({ err: "error decrypt token" });
     }
 
+    UserRepository.getUserByidusuario(decoded.idusuario).then(async (user) => {
+      if (!user) {
+        return res.status(401).json({ err: "no existe el usuario" });
+      }
 
-    let hash = await bcrypt.hash(password, constants.SALT_ROUNDS);
+      if (password !== repeatPassword) {
+        return res.status(401).json({ err: "Las contrasenas no coinciden" });
+      }
 
-    let bret = await UserRepository.completeUserSignUp(decoded.idusuario, hash, tipo_usuario);
-    if (!bret) {
-      return res.status(500).json({
-        ok: false,
-        message: "Unexpected error setting password",
-      });
-    }
+      let hash = await bcrypt.hash(password, constants.SALT_ROUNDS);
 
+      let bret = await UserRepository.completeUserSignUp(
+        decoded.idusuario,
+        hash,
+        tipo_usuario
+      );
+      if (!bret) {
+        return res.status(500).json({
+          ok: false,
+          message: "Unexpected error setting password",
+        });
+      }
 
-    const token = await generateJWT({"idusuario": decoded.idusuario});
+      const token = await generateJWT({ idusuario: decoded.idusuario });
 
       return res.json({ ok: true, token: token });
-  });
-
+    });
   } catch (error) {
     return res.status(500).json({
       ok: false,
@@ -146,14 +149,12 @@ const completeSignUp = async (req, res = response) => {
   }
 };
 
-
 const login = async (req, res = response) => {
   const { mail, password } = req.body;
 
   try {
-
     const usuario = await UserRepository.getUserByMail(mail);
-    if (!usuario) { 
+    if (!usuario) {
       return res.status(400).json({
         ok: false,
         message: "User or password incorrect",

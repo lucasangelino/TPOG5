@@ -1,40 +1,18 @@
-import React, {useState} from 'react';
-import {
-  View,
-  TextInput,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-} from 'react-native';
+import React from 'react';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 
-const RegisterConfirmed = ({navigation}) => {
-  const [alias, setAlias] = useState('');
-  const [email, setEmail] = useState('');
-
-  const handleRegister = () => {
-    // Handle login logic here
-  };
+const RegisterScreen = ({navigation}) => {
+  const handleContinue = () => navigation.navigate('Login');
 
   return (
     <View style={styles.container}>
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        onChangeText={text => setEmail(text)}
-        value={email}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Alias"
-        secureTextEntry
-        onChangeText={text => setAlias(text)}
-        value={alias}
-      />
-      <TouchableOpacity style={styles.loginBtn} onPress={handleRegister}>
-        <Text>Registrar</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-        <Text style={styles.link}>Crear nueva cuenta</Text>
+      <Text style={styles.title}>Registro exitoso</Text>
+      <Text style={styles.subtitle}>
+        Por favor, revise la casilla de correo electronico para verificar su
+        cuenta
+      </Text>
+      <TouchableOpacity style={styles.continuarBtn} onPress={handleContinue}>
+        <Text>Continuar</Text>
       </TouchableOpacity>
     </View>
   );
@@ -43,32 +21,18 @@ const RegisterConfirmed = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingHorizontal: 20,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#6D8C00',
   },
-  form: {
-    width: '80%',
-    justifyContent: 'center',
-    alignItems: 'center',
+  title: {
+    fontSize: 40,
   },
-  input: {
-    width: '80%',
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 10,
-    paddingLeft: 10,
-    borderRadius: 100,
+  subtitle: {
+    fontSize: 20,
   },
-  linkContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  link: {
-    color: 'white',
-  },
-  loginBtn: {
+  continuarBtn: {
     width: '80%',
     backgroundColor: '#000',
     borderRadius: 100,
@@ -79,4 +43,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RegisterConfirmed;
+export default RegisterScreen;
