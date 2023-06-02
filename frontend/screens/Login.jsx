@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import bcrypt from 'react-native-bcrypt';
 import {
   View,
   TextInput,
@@ -11,17 +12,29 @@ const LoginScreen = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
+  const [hash, setHashedPassword] = useState('hash');
+
+  const getHashedPassword = passwordToHash => {
+    // TODO: unintall bcrypt
+    const saltRounds = 6;
+    const salt = bcrypt.genSaltSync(saltRounds);
+    const hashedPassword = bcrypt.hashSync(passwordToHash, salt);
+    console.log(hashedPassword);
+    return hashedPassword;
+  };
 
   const handleLogin = () => {
-    const res = fetch('http://localhost:8080/auth/login', {
+    const hashedPassword = getHashedPassword(password);
+    const res = fetch('http://192.168.0.10:8080/auth/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({email, password}),
+      body: JSON.stringify({email, password: hashedPassword}),
     });
     if (res.status === 200) {
-      navigation.navigate('Home');
+      console.log('Login successful');
+      // navigation.navigate('Home');
     } else {
       setError(res.message);
     }
@@ -56,6 +69,7 @@ const LoginScreen = ({navigation}) => {
             <Text style={styles.link}>Crear nueva cuenta</Text>
           </TouchableOpacity>
         </View>
+        <Text style={styles.link}>{hash}</Text>
       </View>
     </View>
   );
