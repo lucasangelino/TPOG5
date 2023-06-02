@@ -129,20 +129,6 @@ const completeSignUp = async (req, res = response) => {
         });
       }
 
-      let hash = await bcrypt.hash(password, constants.SALT_ROUNDS);
-
-      let bret = await UserRepository.completeUserSignUp(
-        decoded.idusuario,
-        hash,
-        tipo_usuario
-      );
-      if (!bret) {
-        return res.status(500).json({
-          ok: false,
-          message: "Unexpected error setting password",
-        });
-      }
-
       const token = await generateJWT({ idusuario: decoded.idusuario });
 
       return res.json({ ok: true, token: token });

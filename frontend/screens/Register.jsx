@@ -10,6 +10,10 @@ import {
 const RegisterConfirmed = ({navigation}) => {
   const [nickname, setNickName] = useState('');
   const [mail, setEmail] = useState('');
+  const [nombre, setNombre] = useState('');
+  const [password, setPassword] = useState('');
+  const [repeatPassword, setRepeatPassword] = useState('');
+  const [tipo_usuario, setTipoUsuario] = useState('');
   const [error, setError] = useState(null);
   const [isLoading, setLoading] = useState(false);
 
@@ -21,13 +25,19 @@ const RegisterConfirmed = ({navigation}) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({nickname, mail}),
+        body: JSON.stringify({
+          nickname,
+          mail,
+          nombre,
+          password,
+          repeatPassword,
+          tipo_usuario,
+        }),
       });
 
       if (req.status !== 200) {
         setLoading(false);
-        const res = await req.json();
-        setError(`Error al registrar usuario. Code: ${res.message}`);
+        setError(`Error al registrar usuario. Code: ${req.status}`);
       } else {
         navigation.navigate('RegisterConfirmed');
       }
@@ -41,22 +51,52 @@ const RegisterConfirmed = ({navigation}) => {
   return (
     <View style={styles.container}>
       <TextInput
+        name="nickname"
         style={styles.input}
         placeholder="Alias"
         onChangeText={text => setNickName(text)}
         value={nickname}
       />
       <TextInput
+        name="mail"
         style={styles.input}
         placeholder="Email"
         onChangeText={text => setEmail(text)}
         value={mail}
       />
+      <TextInput
+        name="nombre"
+        style={styles.input}
+        placeholder="Nombre"
+        onChangeText={text => setNombre(text)}
+        value={nombre}
+      />
+      <TextInput
+        name="password"
+        style={styles.input}
+        placeholder="Contraseña"
+        onChangeText={text => setPassword(text)}
+        value={password}
+      />
+      <TextInput
+        name="repeatPassword"
+        style={styles.input}
+        placeholder="Repetir contraseña"
+        onChangeText={text => setRepeatPassword(text)}
+        value={repeatPassword}
+      />
+      <TextInput
+        name="tipo_usuario"
+        style={styles.input}
+        placeholder="Alumno"
+        onChangeText={text => setTipoUsuario(text)}
+        value={tipo_usuario}
+      />
       <TouchableOpacity style={styles.loginBtn} onPress={handleRegister}>
         <Text>{isLoading ? 'Registrando...' : 'Registrar'}</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-        <Text style={styles.link}>Crear nueva cuenta</Text>
+      <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+        <Text style={styles.link}>¿ya tienes cuenta? - Ingresa</Text>
       </TouchableOpacity>
       {error && <Text style={styles.error}>{error}</Text>}
     </View>
