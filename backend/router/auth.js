@@ -11,6 +11,9 @@ router.post(
   [
     check("nickname", "El nickname es obligatorio").not().isEmpty(),
     check("mail", "El mail es obligatorio").not().isEmpty(),
+    check("tipo_usuario", "tipo_usuario es obligatorio").not().isEmpty(),
+    check("password", "password es obligatorio").not().isEmpty(),
+    check("repeatPassword", "El repetir contraseña es obligatorio").not().isEmpty(),
     validateField,
   ],
   signup
@@ -18,12 +21,6 @@ router.post(
 
 router.post(
   "/complete",
-  [
-    check("tipo_usuario", "tipo_usuario es obligatorio").not().isEmpty(),
-    check("password", "password es obligatorio").not().isEmpty(),
-    check("repeatPassword", "El repetir contraseña es obligatorio").not().isEmpty(),
-    validateField,
-  ],
   completeSignUp
 );
 

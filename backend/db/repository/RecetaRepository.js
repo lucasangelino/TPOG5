@@ -65,7 +65,11 @@ const getRecetas = async ({receta_id, usuario_id, nombre, tipo_receta, rating_mi
 
 		// TODO validate field exists
 		if(order_by && order_type) {
-			query = query + ` ORDER BY ${order_by} ${order_type} `
+			if (order_by == 'rating') {
+				query = query + ` ORDER BY rating, positiveCount+negativeCount ${order_type} `
+			} else {
+				query = query + ` ORDER BY ${order_by} ${order_type} `
+			}
 		}
 
 		if (skip) {

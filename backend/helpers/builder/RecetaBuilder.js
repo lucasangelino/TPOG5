@@ -46,6 +46,21 @@ class RecetaBuilder {
     return this;
   } 
 
+  rating(rating) {
+    this.entity.rating = rating;
+    return this;
+  } 
+
+  positiveCount(positiveCount) {
+    this.entity.positiveCount = positiveCount;
+    return this;
+  } 
+
+  negativeCount(negativeCount) {
+    this.entity.negativeCount = negativeCount;
+    return this;
+  } 
+
   build() {
     return this.entity;
   }
@@ -61,6 +76,9 @@ class RecetaBuilder {
       .porciones(record.porciones)
 			.cantidadPersonas(record.cantidadPersonas)
 			.idTipo(record.idTipo)
+      .rating(record.rating)
+      .positiveCount(record.positiveCount)
+      .negativeCount(record.negativeCount)
 			.build();
   }
 }
