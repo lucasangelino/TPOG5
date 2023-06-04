@@ -1,45 +1,42 @@
 class User {
-	
-	constructor() {
-		this.idusuario = 0
-		this.nombre = ""
-		this.mail = ""
-		this.nickname = ""
-		this.password = ""
-		this.habilitado = "No"
-		this.avatar = ""
-		this.tipo_usuario = "Visitante"
-	}
+  constructor() {
+    this.idusuario = 0;
+    this.nombre = "";
+    this.mail = "";
+    this.nickname = "";
+    this.password = "";
+    this.habilitado = "No";
+    this.avatar = "";
+    this.tipo_usuario = "Visitante";
+  }
 
-	getidusuario() {
-		return this.idusuario;
-	}
-	
-	getMail() {
-		return this.mail;
-	}
+  getidusuario() {
+    return this.idusuario;
+  }
 
-	getNickname() {
-		return this.mail;
-	}
+  getMail() {
+    return this.mail;
+  }
 
-	getPassword() {
-		return this.password;
-	}
+  getNickname() {
+    return this.mail;
+  }
 
-	getNombre() {
-		return this.nombre;
-	}
+  getPassword() {
+    return this.password;
+  }
 
-	getHabilitado() {
-		return this.habilitado;
-	}
+  getNombre() {
+    return this.nombre;
+  }
 
-	getAvatar() {
-		return this.avatar;
-	}
+  getHabilitado() {
+    return this.habilitado;
+  }
+
+  getAvatar() {
+    return this.avatar;
+  }
 }
-
-
 
 module.exports = User;

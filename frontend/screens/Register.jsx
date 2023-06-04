@@ -36,8 +36,10 @@ const RegisterConfirmed = ({navigation}) => {
       });
 
       if (req.status !== 200) {
+        const res = await req.json();
         setLoading(false);
-        setError(`Error al registrar usuario. Code: ${req.status}`);
+        console.log(res);
+        setError(`Error al ingresar. Code: ${res.message}`);
       } else {
         navigation.navigate('RegisterConfirmed');
       }

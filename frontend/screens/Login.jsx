@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import bcrypt from 'react-native-bcrypt';
 import {
   View,
   TextInput,
@@ -9,34 +8,34 @@ import {
 } from 'react-native';
 
 const LoginScreen = ({navigation}) => {
-  const [email, setEmail] = useState('');
+  const [mail, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [hash, setHashedPassword] = useState('hash');
 
-  const getHashedPassword = passwordToHash => {
-    // TODO: unintall bcrypt
-    const saltRounds = 6;
-    const salt = bcrypt.genSaltSync(saltRounds);
-    const hashedPassword = bcrypt.hashSync(passwordToHash, salt);
-    console.log(hashedPassword);
-    return hashedPassword;
-  };
+  const handleLogin = async () => {
+    try {
+      setIsLoading(true);
+      const req = await fetch('http://192.168.0.10:8080/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({mail, password}),
+      });
 
-  const handleLogin = () => {
-    const hashedPassword = getHashedPassword(password);
-    const res = fetch('http://192.168.0.10:8080/auth/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({email, password: hashedPassword}),
-    });
-    if (res.status === 200) {
-      console.log('Login successful');
-      // navigation.navigate('Home');
-    } else {
-      setError(res.message);
+      if (req.status !== 200) {
+        const res = await req.json();
+        setIsLoading(false);
+        console.log(res);
+        setError(`Error al ingresar. Code: ${res.message}`);
+      } else {
+        navigation.navigate('Home');
+      }
+    } catch (err) {
+      setIsLoading(false);
+      console.log(err);
+      setError(err);
     }
   };
 
@@ -48,7 +47,7 @@ const LoginScreen = ({navigation}) => {
           style={styles.input}
           placeholder="Email"
           onChangeText={text => setEmail(text)}
-          value={email}
+          value={mail}
         />
         <TextInput
           style={styles.input}
@@ -58,7 +57,7 @@ const LoginScreen = ({navigation}) => {
           value={password}
         />
         <TouchableOpacity style={styles.loginBtn} onPress={handleLogin}>
-          <Text>Login</Text>
+          <Text>{!isLoading ? 'Ingresar' : 'Ingresando...'}</Text>
         </TouchableOpacity>
 
         <View style={styles.linkContainer}>
@@ -68,8 +67,8 @@ const LoginScreen = ({navigation}) => {
           <TouchableOpacity onPress={() => navigation.navigate('Register')}>
             <Text style={styles.link}>Crear nueva cuenta</Text>
           </TouchableOpacity>
+          <Text>{error}</Text>
         </View>
-        <Text style={styles.link}>{hash}</Text>
       </View>
     </View>
   );
