@@ -6,33 +6,35 @@ import {
   StyleSheet,
   TouchableOpacity,
   FlatList,
+  ImageBackground,
 } from 'react-native';
 import Navbar from '../components/Navbar';
 
 const recetas = [
   {
     id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-    title: 'First Item',
+    title: 'Pollo Frito',
+    img: 'https://cocer.deagapornis.com/wp-content/uploads/2021/09/pollo-frito-original.png',
   },
   {
     id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-    title: 'Second Item',
+    title: 'Brownie',
+    img: 'https://media.mykaramelli.com/galeria/recetas/brownie-de-capuchino-y-nueces-de-pecan_52_1_890x445.jpg',
   },
   {
     id: '58694a0f-3da1-471f-bd96-145571e29d72',
-    title: 'Third Item',
+    title: 'Ensalada Caesar',
+    img: 'https://www.goodnes.com/sites/g/files/jgfbjl321/files/srh_recipes/755f697272cbcdc6e5df2adb44b1b705.jpg',
   },
   {
     id: 'bd7acbea-c1b1-46c2-dfdf-3ad53abb28ba',
-    title: 'First Item',
+    title: 'Flan',
+    img: 'https://images.aws.nestle.recipes/original/f07639d0bdf09dac4f27aa9562bf15a9_FLAN_DE_VAINILLA.jpg',
   },
   {
-    id: '3ac68afc-c605-48d3-234-fbd91aa97f63',
-    title: 'Second Item',
-  },
-  {
-    id: '58694a0f-3da1-471f-cgh-145571e29d72',
-    title: 'Third Item',
+    id: 'bd7acbea-c1b1-46c2-dfdf-3ad53asdsad',
+    title: 'Hamburguesa',
+    img: 'https://clarin.com/img//2021/06/17/LC25eDtCT_1200x630__1.jpg',
   },
 ];
 
@@ -67,9 +69,14 @@ const Home = ({navigation}) => {
 };
 
 const RecetaCard = ({receta}) => {
+  const image = {
+    uri: receta.img,
+  };
   return (
     <View style={styles.recetaCard}>
-      <Text>{receta.title}</Text>
+      <ImageBackground source={image} resizeMode="cover" style={styles.image}>
+        <Text style={styles.text}>{receta.title}</Text>
+      </ImageBackground>
     </View>
   );
 };
@@ -86,6 +93,12 @@ const styles = StyleSheet.create({
   },
   recetasList: {
     width: '100%',
+    marginVertical: 10,
+  },
+  image: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    borderRadius: 10,
   },
   inputSearch: {
     display: 'flex',
@@ -104,7 +117,6 @@ const styles = StyleSheet.create({
     height: 200,
     backgroundColor: 'gray',
     borderRadius: 10,
-    padding: 10,
     marginVertical: 10,
   },
   title: {
@@ -124,8 +136,14 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     borderRadius: 100,
   },
+  text: {
+    color: '#fff',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    padding: 2,
+  },
   searchText: {
     color: '#000',
+    padding: 2,
     fontWeight: 'bold',
   },
 });
