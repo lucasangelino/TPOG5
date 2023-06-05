@@ -12,7 +12,8 @@ CREATE TABLE usuarios(
 	nombre VARCHAR(150),
 	password VARCHAR(500),
 	avatar VARCHAR(300),
-	tipo_usuario VARCHAR(10) CONSTRAINT chk_tipo_usuario CHECK (tipo_usuario in ('Alumno','Visitante'))
+	tipo_usuario VARCHAR(10) CONSTRAINT chk_tipo_usuario CHECK (tipo_usuario in ('Alumno','Visitante')),
+	otp VARCHAR(100)
 );
 
 CREATE TABLE tipos(
