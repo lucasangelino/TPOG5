@@ -22,4 +22,27 @@ router.post("/",
 ],
 recetasCtrl.addReceta);
 
+router.get("/step", 
+[
+  check("idPaso", "El idPaso es obligatorio").not().isEmpty(),
+  validateField,
+],
+recetasCtrl.getRecetaStepById);
+
+router.post("/step", 
+[
+  check("idReceta", "El idReceta es obligatorio").not().isEmpty(),
+  check("nroPaso", "El nroPaso es obligatorio").not().isEmpty(),
+  check("texto", "El texto es obligatorio").not().isEmpty(),
+  validateField,
+],
+recetasCtrl.addRecetaStep);
+
+router.delete("/step", 
+[
+  check("idPaso", "El idPaso es obligatorio").not().isEmpty(),
+  validateField,
+],
+recetasCtrl.deleteRecetaStep);
+
 module.exports = router;

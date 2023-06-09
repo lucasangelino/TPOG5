@@ -83,6 +83,7 @@ CREATE TABLE pasos(
 	idReceta int,
 	nroPaso int,
 	texto VARCHAR(2000),
+	estado int default 1,
 	CONSTRAINT fk_pasos_recetas foreign key (idReceta) references recetas
 );
 
@@ -109,7 +110,7 @@ VALUES(1, 'Pastas');
 
 INSERT INTO usuarios(idusuario, mail, nickname, habilitado, nombre, password, avatar, tipo_usuario) 
 OVERRIDING SYSTEM VALUE
-VALUES(1, 'alumno@uade.edu.ar', 'alumno', 'Si', 'AlumnoUade', '$2b$06$Q1ULFcGYfOAIvVcLEBMDbepppkD5iw8JkhmvdEhW4JgL9HvOwVxmi', ' ', 'Alumno');
+VALUES(1, 'alumno@uade.edu.ar', 'alumno', 'Si', 'AlumnoUade', '$2b$06$Nqq5r0jxYW8YO6K7d83ug.9fvDcLF3Ul3uzrXhC/ty9K5UZKW2F1a', ' ', 'Alumno');
 
 
 -- Ingredientes
