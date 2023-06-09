@@ -38,6 +38,14 @@ router.post("/step",
 ],
 recetasCtrl.addRecetaStep);
 
+router.put("/step", 
+[
+  check("idPaso", "El idPaso es obligatorio").not().isEmpty(),
+  check("texto", "El texto es obligatorio").not().isEmpty(),
+  validateField,
+],
+recetasCtrl.updateRecetaStep);
+
 router.delete("/step", 
 [
   check("idPaso", "El idPaso es obligatorio").not().isEmpty(),

@@ -103,6 +103,30 @@ const addRecetaStep = async (req, res) => {
 };
 
 // Usuario agrega Paso a Receta existente
+const updateRecetaStep = async (req, res) => {
+  const body = req.body;
+  body.idUsuario = req.idUsuario;
+
+  try {
+    let paso = await PasoRepository.updatePasoById(body);
+    if (!paso) {
+      return res.status(404).json({
+        status: "error",
+        message: "No se encontro el paso"
+      });
+    }
+
+    return res.status(200).json({
+      status: "ok",
+    });
+  } catch (e) {
+    return res
+      .status(e.statusCode)
+      .json({ status: e.name, message: e.message });
+  }
+};
+
+// Usuario agrega Paso a Receta existente
 const deleteRecetaStep = async (req, res) => {
   const body = req.body;
   body.idUsuario = req.idUsuario;
@@ -130,5 +154,6 @@ module.exports = {
   addReceta,
   getRecetaStepById,
   addRecetaStep,
+  updateRecetaStep,
   deleteRecetaStep,
 };

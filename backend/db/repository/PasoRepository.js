@@ -37,6 +37,23 @@ const addPaso = async ({idReceta, nroPaso, texto}) => {
 	}
 };
 
+const updatePasoById = async ({idPaso, texto}) => {
+	try {
+
+		let query = ` UPDATE pasos SET texto = '${texto}' WHERE idPaso = '${idPaso}' `;
+		const records = await pg_pool.query(query);
+
+
+		if (records.rowCount >= 1) {
+			return true
+		} else {
+			return false;
+		}
+	} catch (error) {
+		return false;
+	}
+};
+
 const deletePaso = async ({idPaso}) => {
 	try {
 
@@ -57,5 +74,6 @@ const deletePaso = async ({idPaso}) => {
 module.exports = {
 	addPaso,
 	getPasoById,
+	updatePasoById,
 	deletePaso
 };
