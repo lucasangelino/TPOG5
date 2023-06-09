@@ -30,9 +30,9 @@ CREATE TABLE recetas(
 	porciones int,
 	cantidadPersonas int,
 	idTipo int,
-	rating int,
-	positiveCount int,
-	negativeCount int,
+	rating int default 0,
+	positiveCount int default 0,
+	negativeCount int default 0,
 	CONSTRAINT fk_recetas_usuarios foreign key (idusuario) references usuarios,
 	CONSTRAINT fk_recetas_tipos foreign key (idTipo) references tipos
 );

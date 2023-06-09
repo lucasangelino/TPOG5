@@ -1,8 +1,10 @@
 const { Router } = require("express");
 const { check } = require("express-validator");
-const { login, renew, signup, completeSignUp } = require("../controllers/auth");
-const { validateJWT } = require("../middlewares/tokenValidator");
+const { login, renew, signup, completeSignUp  } = require("../controllers/auth");
 const { validateField } = require("../middlewares/fieldValidator");
+
+const decodeUserFromToken =
+  require("../middlewares/auth.js").decodeUserFromToken;
 
 const router = Router();
 
@@ -18,9 +20,9 @@ router.post(
     signup
 );
 
-router.post(
-    "/complete",
-    completeSignUp
+router.get(
+  "/complete",
+  completeSignUp
 );
 
 router.post(
@@ -32,10 +34,11 @@ router.post(
     login
 );
 
+/*---------- Protected Routes ----------*/
+router.use(decodeUserFromToken);
 router.get(
-    "/renew",
-    validateJWT,
-    renew
+  "/renew",
+  renew
 );
 
 router.post(

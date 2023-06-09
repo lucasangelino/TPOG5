@@ -25,16 +25,29 @@ const getRecetas = async (req, res) => {
 
 const addReceta = async (req, res) => {
   const body = req.body;
-  body.user = req.user;
+  body.idUsuario = req.idUsuario;
 
   try {
-    let clase = await RecetaRepository.addRecetas(body);
+
+    let user = await UserRepository.getUserByidusuario(body.idUsuario);
+		if (!user) {
+      return res
+      .status(401)
+      .json({
+        status: "error",
+        message: "No existe el usuario para dar de alta la receta"
+      });
+		}
+
+
+
+    let receta = await RecetaRepository.addRecetas(body);
     return res
       .status(200)
       .json({
         status: "ok",
         message: "Receta dada de alta exitosamente",
-        data: clase,
+        data: receta,
       });
   } catch (e) {
     return res

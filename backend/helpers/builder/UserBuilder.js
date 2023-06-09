@@ -58,7 +58,7 @@ class UserBuilder {
 			.mail(record.mail)
       .password(record.password)
 			.nickname(record.nickname)
-			.habilitado(false)
+			.habilitado(record.habilitado)
 			.build();
 
   }

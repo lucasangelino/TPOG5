@@ -88,12 +88,13 @@ const signup = async(req, res = response) => {
             console.log(error);
             return json.send(error);
         }
-    } catch (error) {
-        return res.status(500).json({
-            ok: false,
-            message: "Unexpected error",
-        });
-    }
+  } catch (error) {
+    return res.status(500).json({
+      ok: false,
+      message: "Unexpected error",
+      stack: error.stack,
+    });
+  }
 };
 
 const completeSignUp = async(req, res = response) => {
@@ -154,11 +155,11 @@ const login = async(req, res = response) => {
         }
 
         const validPassword = bcrypt.compareSync(password, usuario.getPassword());
-        if (!validPassword || !usuario.getHabilitado()) {
-            return res.status(400).json({
-                ok: false,
-                message: "User or password incorrect",
-            });
+        if (!validPassword || usuario.getHabilitado() != "Si") {
+          return res.status(400).json({
+            ok: false,
+            message: "User or password incorrect",
+          });
         }
 
         // Generate JWT

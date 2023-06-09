@@ -1,5 +1,7 @@
 const { pg_pool } = require('../database')
 const RecetaBuilder = require("../../helpers/builder/RecetaBuilder.js");
+const UserRepository = require('./UserRepository.js')
+const TipoRepository = require('./TipoRepository.js')
 
 /**
 * Creates User with the given data
@@ -99,21 +101,28 @@ const getRecetas = async ({receta_id, usuario_id, nombre, tipo_receta, rating_mi
 	}
 };
 
-const addRecetas = async ({}) => {
+const addRecetas = async ({idUsuario, nombre,descripcion,tipo,foto,porciones,cantidadPersonas}) => {
 	try {
-/* 
-	
+
+
+		let type = await TipoRepository.getTipoByName(tipo);
+
+		// no existe el tipo lo creo
+		if (!type) {
+			type = await TipoRepository.addNewTipo(tipo);
+		}
+
+		let query = ` INSERT INTO recetas (idUsuario, nombre, descripcion, foto, porciones, cantidadPersonas, idTipo) `
+		query = query  + ` VALUES('${idUsuario}', '${nombre}', '${descripcion}', '${foto}', '${porciones}', '${cantidadPersonas}', '${type.idTipo}') RETURNING *`;
 		const records = await pg_pool.query(query);
 		if (records.rows.length >= 1) {
 			let record = records.rows[0];
 
-			let user = new RecetaBuilder().buildWithRecord(record);
-			return user;
+			let receta = new RecetaBuilder().buildWithRecord(record);
+			return receta;
 		} else {
 			return null;
-		} */
-
-		return null;
+		}
 	} catch (error) {
 		return null;
 	}
