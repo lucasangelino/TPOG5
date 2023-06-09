@@ -3,6 +3,8 @@ var constants = require("../common/constants");
 const UserRepository = require("../db/repository/UserRepository");
 const RecetaRepository = require("../db/repository/RecetaRepository.js");
 const PasoRepository = require("../db/repository/PasoRepository.js");
+const MultimediaRepository = require("../db/repository/MultimediaRepository.js");
+const Multimedia = require("../models/Multimedia");
 
 // Metodo general que es utilizado en dos endpoints distintos ya que es configurable el metodo de ordenamiento, por cuales campos filtrar
 // y el paginado que se desea.
@@ -79,6 +81,8 @@ const addRecetaStep = async (req, res) => {
   const body = req.body;
   body.idUsuario = req.idUsuario;
 
+   // TODO validar ownership de la receta para el usuario
+
   try {
     let receta = await RecetaRepository.getRecetas({
       receta_id: body.idReceta,
@@ -107,6 +111,8 @@ const updateRecetaStep = async (req, res) => {
   const body = req.body;
   body.idUsuario = req.idUsuario;
 
+   // TODO validar ownership de la receta para el usuario
+
   try {
     let paso = await PasoRepository.updatePasoById(body);
     if (!paso) {
@@ -131,8 +137,80 @@ const deleteRecetaStep = async (req, res) => {
   const body = req.body;
   body.idUsuario = req.idUsuario;
 
+    // TODO validar ownership de la receta para el usuario
+
   try {
     let result = await PasoRepository.deletePaso(body);
+    if (!result) {
+      return res.status(200).json({
+        status: "error",
+      });
+    }
+
+    return res.status(200).json({
+      status: "ok",
+    });
+  } catch (e) {
+    return res
+      .status(e.statusCode)
+      .json({ status: e.name, message: e.message });
+  }
+};
+
+// Usuario agrega Paso a Receta existente
+const addStepMultimedia = async (req, res) => {
+  const body = req.body;
+  body.idUsuario = req.idUsuario;
+
+  // TODO validar ownership de la receta para el usuario
+
+
+  // el tipo de contenido debe ser foto, audio o video
+  if (!constants.ContenidoEnum.includes(body.tipoContenido)) {
+    return res
+        .status(400)
+        .json({ status: "error", message: `'${body.tipoContenido} no es un tipo de contenido valido'` });
+  }
+  
+  // validar que el paso existe
+  let paso = await PasoRepository.getPasoById({idPaso: body.idPaso});
+  if (!paso) {
+    return res.status(404).json({
+      status: "error",
+      message: "no se encontro el paso",
+    });
+  }
+
+
+  try {
+    let multimedia = await MultimediaRepository.addMultimedia(body);
+    if(!multimedia) {
+      return res.status(500).json({
+        status: "error",
+        message: "no se pudo agregar el contenido",
+      });
+    }
+
+    return res.status(200).json({
+      status: "ok",
+      data: multimedia,
+    });
+  } catch (e) {
+    return res
+      .status(e.statusCode)
+      .json({ status: e.name, message: e.message });
+  }
+};
+
+// Usuario agrega Paso a Receta existente
+const deleteStepMultimedia = async (req, res) => {
+  const body = req.body;
+  body.idUsuario = req.idUsuario;
+
+    // TODO validar ownership de la receta para el usuario
+
+  try {
+    let result = await MultimediaRepository.deleteMultimedia(body);
     if (!result) {
       return res.status(200).json({
         status: "error",
@@ -156,4 +234,6 @@ module.exports = {
   addRecetaStep,
   updateRecetaStep,
   deleteRecetaStep,
+  addStepMultimedia,
+  deleteStepMultimedia
 };

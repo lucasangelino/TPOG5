@@ -2,6 +2,8 @@ require("dotenv").config();
 
 const RoleEnum = ["Alumno", "Visitante"];
 
+const ContenidoEnum = ["foto", "video", "audio"];
+
 const SALT_ROUNDS = 6;
 
 const auth = {
@@ -22,7 +24,8 @@ const mailoptions = {
 module.exports = {
   auth,
   mailoptions,
-  RoleEnum: RoleEnum,
+  RoleEnum,
+  ContenidoEnum,
   SALT_ROUNDS,
   defaultProfileGuestImage: "http://res.cloudinary.com/dvjdc3ssy/image/upload/v1668894991/dohnmb6blyd2ei1bjha7.png",
   defaultProfileStudentImage: "https://res.cloudinary.com/dvjdc3ssy/image/upload/v1668894850/rjhj017czkwubzqiw9uu.png",

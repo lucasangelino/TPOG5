@@ -98,9 +98,10 @@ CREATE TABLE fotos(
 CREATE TABLE multimedia(
 	idContenido int NOT NULL GENERATED ALWAYS AS IDENTITY CONSTRAINT pk_multimedia PRIMARY KEY,
 	idPaso int NOT NULL,
-	tipo_contenido VARCHAR(10) CONSTRAINT chk_tipo_contenido CHECK (tipo_contenido in ('foto','video','audio')),
+	tipoContenido VARCHAR(10) CONSTRAINT chk_tipo_contenido CHECK (tipoContenido in ('foto','video','audio')),
 	extension VARCHAR(5),
 	urlContenido VARCHAR(300),
+	estado int default 1,
 	CONSTRAINT fk_multimedia_pasos foreign key (idPaso) references pasos
 );
 

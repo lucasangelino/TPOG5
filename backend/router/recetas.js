@@ -11,6 +11,9 @@ const recetasCtrl = require("../controllers/recetas");
 /*---------- Public Routes ----------*/
 router.get("/", recetasCtrl.getRecetas);
 
+
+
+
 /*---------- Protected Routes ----------*/
 router.use(decodeUserFromToken);
 router.post("/", 
@@ -52,5 +55,22 @@ router.delete("/step",
   validateField,
 ],
 recetasCtrl.deleteRecetaStep);
+
+router.post("/step/multimedia", 
+[
+  check("idPaso", "El idPaso es obligatorio").not().isEmpty(),
+  check("tipoContenido", "El tipoContenido es obligatorio").not().isEmpty(),
+  check("extension", "El extension es obligatorio").not().isEmpty(),
+  check("urlContenido", "El urlContenido es obligatorio").not().isEmpty(),
+  validateField,
+],
+recetasCtrl.addStepMultimedia);
+
+router.delete("/step/multimedia", 
+[
+  check("idContenido", "El idContenido es obligatorio").not().isEmpty(),
+  validateField,
+],
+recetasCtrl.deleteStepMultimedia);
 
 module.exports = router;

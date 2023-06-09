@@ -22,10 +22,10 @@ const signup = async(req, res = response) => {
     try {
 
         const { nickname, mail, nombre, password, repeatPassword, tipo_usuario } = req.body;
-        if (!['Visitante', 'Alumno'].includes(tipo_usuario)) {
+        if (!constants.RoleEnum.includes(tipo_usuario)) {
             return res
                 .status(400)
-                .json({ err: `'${tipo_usuario} no es un tipo de usuario valido'` });
+                .json({ status: "error", message: `'${tipo_usuario} no es un tipo de usuario valido'` });
         }
 
         if (password !== repeatPassword) {
