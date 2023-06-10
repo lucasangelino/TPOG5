@@ -1,5 +1,5 @@
 const { check } = require("express-validator");
-const { validateField } = require("../middlewares/fieldValidator");
+const { validateField } = require("../middlewares/fieldValidator.js");
 const decodeUserFromToken =  require("../middlewares/auth.js").decodeUserFromToken;
 const checkAuth  = require("../middlewares/auth.js").checkAuth;
 
