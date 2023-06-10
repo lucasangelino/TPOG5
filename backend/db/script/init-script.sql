@@ -52,7 +52,7 @@ CREATE TABLE utilizados (
 	idUtilizado int NOT NULL GENERATED ALWAYS AS IDENTITY CONSTRAINT pk_utilizados PRIMARY KEY,
 	idReceta int,
 	idIngrediente int,
-	cantidad int,
+	cantidad float,
 	idUnidad int,
 	observaciones VARCHAR(500),
 	CONSTRAINT fk_utilizados_recetas foreign key (idReceta) references recetas,
@@ -108,7 +108,7 @@ CREATE TABLE multimedia(
 
 INSERT INTO tipos(idTipo, descripcion) 
 OVERRIDING SYSTEM VALUE
-VALUES(1, 'Pastas');
+VALUES(881, 'Pastas');
 
 INSERT INTO usuarios(idusuario, mail, nickname, habilitado, nombre, password, avatar, tipo_usuario) 
 OVERRIDING SYSTEM VALUE
@@ -118,27 +118,27 @@ VALUES(1, 'alumno@uade.edu.ar', 'alumno', 'Si', 'AlumnoUade', '$2b$06$Nqq5r0jxYW
 -- Ingredientes
 INSERT INTO ingredientes(idIngrediente, nombre) 
 OVERRIDING SYSTEM VALUE
-VALUES(1, 'Spaghetti');
+VALUES(991, 'Spaghetti');
 
 INSERT INTO ingredientes(idIngrediente, nombre) 
 OVERRIDING SYSTEM VALUE
-VALUES(2, 'Tomate');
+VALUES(992, 'Tomate');
 
 INSERT INTO ingredientes(idIngrediente, nombre) 
 OVERRIDING SYSTEM VALUE
-VALUES(3, 'Agua Hirviendo');
+VALUES(993, 'Agua Hirviendo');
 
 INSERT INTO ingredientes(idIngrediente, nombre) 
 OVERRIDING SYSTEM VALUE
-VALUES(4, 'Queso en Hebras');
+VALUES(994, 'Queso en Hebras');
 
 INSERT INTO ingredientes(idIngrediente, nombre) 
 OVERRIDING SYSTEM VALUE
-VALUES(5, 'Pesto');
+VALUES(995, 'Pesto');
 
 INSERT INTO ingredientes(idIngrediente, nombre) 
 OVERRIDING SYSTEM VALUE
-VALUES(6, 'Manteca');
+VALUES(996, 'Manteca');
 
 
 -- Unidades
@@ -157,76 +157,76 @@ VALUES(3, 'cm3');
 
 -- Spaghettis con Pesto
 INSERT INTO recetas(idusuario, nombre, descripcion,foto,porciones,cantidadPersonas,idTipo, rating, positiveCount, negativeCount) 
-VALUES(1, 'Spaghetti con pesto', 'Spaghettis con pesto', '', 1, 1, 1, 5, 499, 0);
+VALUES(1, 'Spaghetti con pesto', 'Spaghettis con pesto', '', 1, 1, 881, 5, 499, 0);
 
 INSERT INTO utilizados(idUtilizado, idReceta, idIngrediente, cantidad, idUnidad, observaciones) 
 OVERRIDING SYSTEM VALUE
-VALUES(1, 1, 1, 100, 1, '100 gramos de Spaghettis Spaghetti');
+VALUES(9991, 1, 991, 100, 1, '100 gramos de Spaghettis Spaghetti');
 
 INSERT INTO utilizados(idUtilizado, idReceta, idIngrediente, cantidad, idUnidad, observaciones) 
 OVERRIDING SYSTEM VALUE
-VALUES(2, 1, 5, 20, 1, '20 gramos de Pesto');
+VALUES(9992, 1, 995, 20, 1, '20 gramos de Pesto');
 
 INSERT INTO utilizados(idUtilizado, idReceta, idIngrediente, cantidad, idUnidad, observaciones) 
 OVERRIDING SYSTEM VALUE
-VALUES(3, 1, 3, 500, 3, '500 cm3 de agua hirviendo');
+VALUES(9993, 1, 993, 500, 3, '500 cm3 de agua hirviendo');
 
 INSERT INTO utilizados(idUtilizado, idReceta, idIngrediente, cantidad, idUnidad, observaciones) 
 OVERRIDING SYSTEM VALUE
-VALUES(4, 1, 4, 50, 1, '50 gramos de queso en hebras');
+VALUES(9994, 1, 994, 50, 1, '50 gramos de queso en hebras');
 
 
 -- Spaghettis con Fileto
 INSERT INTO recetas(idusuario, nombre, descripcion,foto,porciones,cantidadPersonas,idTipo, rating, positiveCount, negativeCount) 
-VALUES(1, 'Spaghetti con Fileto', 'Spaghettis con Fileto', '', 1, 1, 1, 5, 500, 0);
+VALUES(1, 'Spaghetti con Fileto', 'Spaghettis con Fileto', '', 1, 1, 881, 5, 500, 0);
 
 INSERT INTO utilizados(idUtilizado, idReceta, idIngrediente, cantidad, idUnidad, observaciones) 
 OVERRIDING SYSTEM VALUE
-VALUES(5, 2, 1, 100, 1, '100 gramos de Spaghettis Spaghetti');
+VALUES(9995, 2, 991, 100, 1, '100 gramos de Spaghettis Spaghetti');
 
 INSERT INTO utilizados(idUtilizado, idReceta, idIngrediente, cantidad, idUnidad, observaciones) 
 OVERRIDING SYSTEM VALUE
-VALUES(6, 2, 2, 2, 2, '2 unidades de tomate');
+VALUES(9996, 2, 992, 2, 2, '2 unidades de tomate');
 
 INSERT INTO utilizados(idUtilizado, idReceta, idIngrediente, cantidad, idUnidad, observaciones) 
 OVERRIDING SYSTEM VALUE
-VALUES(7, 2, 3, 500, 3, '500 cm3 de agua hirviendo');
+VALUES(9997, 2, 993, 500, 3, '500 cm3 de agua hirviendo');
 
 INSERT INTO utilizados(idUtilizado, idReceta, idIngrediente, cantidad, idUnidad, observaciones) 
 OVERRIDING SYSTEM VALUE
-VALUES(8, 2, 6, 50, 1, '50 gramos de manteca');
+VALUES(9998, 2, 996, 50, 1, '50 gramos de manteca');
 
 -- Sorrentinos de Ricota
 INSERT INTO recetas(idusuario, nombre, descripcion,foto,porciones,cantidadPersonas,idTipo, rating, positiveCount, negativeCount) 
-VALUES(1, 'Sorrentinos de Ricota', 'Sorrentinos de Ricota', '', 1, 1, 1, 5, 200, 0);
+VALUES(1, 'Sorrentinos de Ricota', 'Sorrentinos de Ricota', '', 1, 1, 881, 5, 200, 0);
 
 -- Sorrentinos de Verdura
 INSERT INTO recetas(idusuario, nombre, descripcion,foto,porciones,cantidadPersonas,idTipo) 
-VALUES(1, 'Sorrentinos de Verdura', 'Sorrentinos de Verdura', '', 1, 1, 1);
+VALUES(1, 'Sorrentinos de Verdura', 'Sorrentinos de Verdura', '', 1, 1, 881);
 
 -- Sorrentinos de Salmon
 INSERT INTO recetas(idusuario, nombre, descripcion,foto,porciones,cantidadPersonas,idTipo) 
-VALUES(1, 'Sorrentinos de Salmon', 'Sorrentinos de Salmon', '', 1, 1, 1);
+VALUES(1, 'Sorrentinos de Salmon', 'Sorrentinos de Salmon', '', 1, 1, 881);
 
 -- Macarrones con Bolognesa
 INSERT INTO recetas(idusuario, nombre, descripcion,foto,porciones,cantidadPersonas,idTipo) 
-VALUES(1, 'Macarrones con Bolognesa', 'Macarrones con Bolognesa', '', 1, 1, 1);
+VALUES(1, 'Macarrones con Bolognesa', 'Macarrones con Bolognesa', '', 1, 1, 881);
 
 -- Macarrones con Queso
 INSERT INTO recetas(idusuario, nombre, descripcion,foto,porciones,cantidadPersonas,idTipo) 
-VALUES(1, 'Macarrones con Queso', 'Macarrones con Queso', '', 1, 1, 1);
+VALUES(1, 'Macarrones con Queso', 'Macarrones con Queso', '', 1, 1, 881);
 
 -- Canelones
 INSERT INTO recetas(idusuario, nombre, descripcion,foto,porciones,cantidadPersonas,idTipo) 
-VALUES(1, 'Canelones', 'Canelones', '', 1, 1, 1);
+VALUES(1, 'Canelones', 'Canelones', '', 1, 1, 881);
 
 -- Tallarines
 INSERT INTO recetas(idusuario, nombre, descripcion,foto,porciones,cantidadPersonas,idTipo) 
-VALUES(1, 'Tallarines', 'Tallarines', '', 1, 1, 1);
+VALUES(1, 'Tallarines', 'Tallarines', '', 1, 1, 881);
 
 -- Lasagna
 INSERT INTO recetas(idusuario, nombre, descripcion,foto,porciones,cantidadPersonas,idTipo) 
-VALUES(1, 'Lasagna', 'Lasagna', '', 1, 1, 1);
+VALUES(1, 'Lasagna', 'Lasagna', '', 1, 1, 881);
 
 
 -- Pasos y Multimedia
