@@ -59,7 +59,12 @@ class RecetaBuilder {
   negativeCount(negativeCount) {
     this.entity.negativeCount = negativeCount;
     return this;
-  } 
+  }
+
+  estado(estado) {
+    this.entity.estado = estado;
+    return this;
+  }
 
   build() {
     return this.entity;
@@ -79,6 +84,7 @@ class RecetaBuilder {
       .rating(record.rating)
       .positiveCount(record.positivecount)
       .negativeCount(record.negativecount)
+      .estado(record.estado)
 			.build();
   }
 }

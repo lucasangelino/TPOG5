@@ -31,7 +31,7 @@ const getRecetas = async ({receta_id, usuario_id, nombre, tipo_receta, rating_mi
 			}
 		} */
 		
-		query = query + "WHERE 0 = 0 ";
+		query = query + "WHERE r.estado = 1 ";
 		
 		if (receta_id) {
 			query = query + ` AND r.idReceta = '${receta_id}' `
@@ -84,24 +84,19 @@ const getRecetas = async ({receta_id, usuario_id, nombre, tipo_receta, rating_mi
 
 		const records = await pg_pool.query(query);
 
-
-		return records.rows;
-
-
-		if (records.rows.length >= 1) {
-			let record = records.rows[0];
-
-			let user = new RecetaBuilder().buildWithRecord(record);
-			return user;
-		} else {
-			return null;
+		let result = [];
+		for (let index = 0; index < records.rows.length; index++) {
+			result.push(new RecetaBuilder().buildWithRecord(records.rows[index]));
 		}
+
+		return result;
 	} catch (error) {
 		return null;
 	}
 };
 
-const addRecetas = async ({idUsuario, nombre,descripcion,tipo,foto,porciones,cantidadPersonas}) => {
+// Agrega receta
+const addReceta = async ({idUsuario, nombre,descripcion,tipo,foto,porciones,cantidadPersonas}) => {
 	try {
 
 
@@ -128,8 +123,25 @@ const addRecetas = async ({idUsuario, nombre,descripcion,tipo,foto,porciones,can
 	}
 };
 
+// Elimina receta existente
+const deleteReceta = async ({idReceta}) => {
+	try {
+
+		let query = ` UPDATE recetas SET estado = 0 WHERE idReceta = '${idReceta}' `;
+		const records = await pg_pool.query(query);
+		if (records.rowCount >= 1) {
+			return true
+		} else {
+			return false;
+		}
+	} catch (error) {
+		return false;
+	}
+};
+
 
 module.exports = {
 	getRecetas,
-	addRecetas
+	addReceta,
+	deleteReceta,
 };

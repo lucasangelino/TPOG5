@@ -33,6 +33,7 @@ CREATE TABLE recetas(
 	rating int default 0,
 	positiveCount int default 0,
 	negativeCount int default 0,
+	estado int default 1,
 	CONSTRAINT fk_recetas_usuarios foreign key (idusuario) references usuarios,
 	CONSTRAINT fk_recetas_tipos foreign key (idTipo) references tipos
 );

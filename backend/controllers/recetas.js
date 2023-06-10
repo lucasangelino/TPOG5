@@ -38,11 +38,47 @@ const addReceta = async (req, res) => {
       });
     }
 
-    let receta = await RecetaRepository.addRecetas(body);
+    let receta = await RecetaRepository.addReceta(body);
     return res.status(200).json({
       status: "ok",
       message: "Receta dada de alta exitosamente",
       data: receta,
+    });
+  } catch (e) {
+    return res
+      .status(e.statusCode)
+      .json({ status: e.name, message: e.message });
+  }
+};
+
+// Elimina unastente receta exi
+const deleteReceta = async (req, res) => {
+  const body = req.body;
+  body.idUsuario = req.idUsuario;
+
+    // TODO validar ownership de la receta para el usuario
+
+  try {
+
+    // Validar que la receta existe
+    let recetas = await RecetaRepository.getRecetas({receta_id: body.idReceta});
+    if (recetas.length < 1) {
+      return res.status(404).json({
+        status: "error",
+        message: "la receta a eliminar no existe",
+      });
+    }
+
+    let result = await RecetaRepository.deleteReceta(body);
+    if (!result) {
+      return res.status(200).json({
+        status: "error",
+      });
+    }
+
+    return res.status(200).json({
+      status: "ok",
+      message: "receta dada de baja, no se mostrara en resultados de busqueda",
     });
   } catch (e) {
     return res
@@ -202,6 +238,31 @@ const addStepMultimedia = async (req, res) => {
   }
 };
 
+// Obtiene contenido Existente por id
+const getStepMultimediaById = async (req, res) => {
+  const body = req.body;
+  body.idUsuario = req.idUsuario;
+
+  try {
+    let contenido = await MultimediaRepository.getMultimediaById({idContenido: body.idContenido});
+    if (!contenido) {
+      return res.status(400).json({
+        status: "error",
+        message: "No existe el contenido",
+      });
+    }
+
+    return res.status(200).json({
+      status: "ok",
+      data: contenido,
+    });
+  } catch (e) {
+    return res
+      .status(e.statusCode)
+      .json({ status: e.name, message: e.message });
+  }
+};
+
 // Usuario agrega Paso a Receta existente
 const deleteStepMultimedia = async (req, res) => {
   const body = req.body;
@@ -230,10 +291,12 @@ const deleteStepMultimedia = async (req, res) => {
 module.exports = {
   getRecetas,
   addReceta,
+  deleteReceta,
   getRecetaStepById,
   addRecetaStep,
   updateRecetaStep,
   deleteRecetaStep,
   addStepMultimedia,
+  getStepMultimediaById,
   deleteStepMultimedia
 };
