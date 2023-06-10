@@ -1,10 +1,10 @@
-const { response } = require("express");
 var constants = require("../common/constants");
+
 const UserRepository = require("../db/repository/UserRepository");
 const RecetaRepository = require("../db/repository/RecetaRepository.js");
 const PasoRepository = require("../db/repository/PasoRepository.js");
+const TipoRepository = require("../db/repository/TipoRepository.js");
 const MultimediaRepository = require("../db/repository/MultimediaRepository.js");
-const Multimedia = require("../models/Multimedia");
 
 // Metodo general que es utilizado en dos endpoints distintos ya que es configurable el metodo de ordenamiento, por cuales campos filtrar
 // y el paginado que se desea.
@@ -58,7 +58,12 @@ const updateReceta = async (req, res) => {
 
     // TODO validar ownership de la receta para el usuario
 
-    // TODO buscar el tipo, si no existe crearlo. 
+    let tipo = await TipoRepository.getTipoByName(body.tipo);
+		// no existe el tipo lo creo
+		if (!tipo) {
+			tipo = await TipoRepository.addNewTipo(body.tipo);
+		}
+    body.idTipo = tipo.idTipo;
 
   try {
 
