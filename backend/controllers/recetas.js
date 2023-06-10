@@ -51,6 +51,46 @@ const addReceta = async (req, res) => {
   }
 };
 
+// Actualiza receta existente
+const updateReceta = async (req, res) => {
+  const body = req.body;
+  body.idUsuario = req.idUsuario;
+
+    // TODO validar ownership de la receta para el usuario
+
+    // TODO buscar el tipo, si no existe crearlo. 
+
+  try {
+
+    // Validar que la receta existe
+    let recetas = await RecetaRepository.getRecetas({receta_id: body.idReceta});
+    if (recetas.length < 1) {
+      return res.status(404).json({
+        status: "error",
+        message: "la receta no existe",
+      });
+    }
+    
+
+    let result = await RecetaRepository.updateReceta(body);
+    if (!result) {
+      return res.status(200).json({
+        status: "error",
+      });
+    }
+
+    return res.status(200).json({
+      status: "ok",
+      message: "receta actualizada",
+      data: result,
+    });
+  } catch (e) {
+    return res
+      .status(e.statusCode)
+      .json({ status: e.name, message: e.message });
+  }
+};
+
 // Elimina unastente receta exi
 const deleteReceta = async (req, res) => {
   const body = req.body;
@@ -65,7 +105,7 @@ const deleteReceta = async (req, res) => {
     if (recetas.length < 1) {
       return res.status(404).json({
         status: "error",
-        message: "la receta a eliminar no existe",
+        message: "la receta no existe",
       });
     }
 
@@ -291,6 +331,7 @@ const deleteStepMultimedia = async (req, res) => {
 module.exports = {
   getRecetas,
   addReceta,
+  updateReceta,
   deleteReceta,
   getRecetaStepById,
   addRecetaStep,

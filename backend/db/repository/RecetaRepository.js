@@ -123,6 +123,43 @@ const addReceta = async ({idUsuario, nombre,descripcion,tipo,foto,porciones,cant
 	}
 };
 
+// actualiza receta existente
+const updateReceta = async (body) => {
+	try {
+
+		var clone = JSON.parse(JSON.stringify(body));
+		delete clone.idReceta;
+		delete clone.idUsuario;
+		delete clone.tipo;
+
+		let query = ` UPDATE recetas SET `
+
+		// generar parte del SET dinamicamente
+		let i = 1;
+		for (let key in clone) {
+			query = query + `${key} = '${body[key]}'`
+			if (i != Object.keys(clone).length) {
+				query = query + ", "
+			}
+			i++;
+		}
+
+		query = query + ` WHERE idReceta = '${body.idReceta}' RETURNING * `;
+		
+		const records = await pg_pool.query(query);
+		if (records.rows.length >= 1) {
+			let record = records.rows[0];
+
+			let receta = new RecetaBuilder().buildWithRecord(record);
+			return receta;
+		} else {
+			return null;
+		}
+	} catch (error) {
+		return null;
+	}
+};
+
 // Elimina receta existente
 const deleteReceta = async ({idReceta}) => {
 	try {
@@ -143,5 +180,6 @@ const deleteReceta = async ({idReceta}) => {
 module.exports = {
 	getRecetas,
 	addReceta,
+	updateReceta,
 	deleteReceta,
 };

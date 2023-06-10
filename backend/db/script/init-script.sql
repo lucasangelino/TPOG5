@@ -227,3 +227,36 @@ VALUES(1, 'Tallarines', 'Tallarines', '', 1, 1, 1);
 -- Lasagna
 INSERT INTO recetas(idusuario, nombre, descripcion,foto,porciones,cantidadPersonas,idTipo) 
 VALUES(1, 'Lasagna', 'Lasagna', '', 1, 1, 1);
+
+
+-- Pasos y Multimedia
+INSERT INTO pasos(idPaso, idReceta, nroPaso, texto)
+OVERRIDING SYSTEM VALUE
+VALUES(1, 1, 1, 'Preparar los ingredientes');
+
+INSERT INTO multimedia(idPaso, tipoContenido, extension, urlContenido)
+VALUES(1, 'foto', 'jpeg', 'https://www.google.com');
+
+INSERT INTO multimedia(idPaso, tipoContenido, extension, urlContenido)
+VALUES(1, 'video', 'mp4', 'https://www.google.com');
+
+INSERT INTO pasos(idPaso, idReceta, nroPaso, texto)
+OVERRIDING SYSTEM VALUE
+VALUES(2, 1, 1, 'Preparar los ingredientes');
+
+INSERT INTO multimedia(idPaso, tipoContenido, extension, urlContenido)
+VALUES(2, 'foto', 'jpeg', 'https://www.google.com');
+
+INSERT INTO pasos(idPaso, idReceta, nroPaso, texto)
+OVERRIDING SYSTEM VALUE
+VALUES(3, 1, 1, 'Preparar los ingredientes');
+
+INSERT INTO multimedia(idPaso, tipoContenido, extension, urlContenido)
+VALUES(3, 'foto', 'jpeg', 'https://www.google.com');
+
+INSERT INTO pasos(idPaso, idReceta, nroPaso, texto)
+OVERRIDING SYSTEM VALUE
+VALUES(4, 1, 1, 'Preparar los ingredientes');
+
+INSERT INTO multimedia(idPaso, tipoContenido, extension, urlContenido)
+VALUES(4, 'foto', 'jpeg', 'https://www.google.com');

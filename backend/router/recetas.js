@@ -1,12 +1,14 @@
 const { check } = require("express-validator");
 const { validateField } = require("../middlewares/fieldValidator");
 const decodeUserFromToken =  require("../middlewares/auth.js").decodeUserFromToken;
+const checkAuth  = require("../middlewares/auth.js").checkAuth;
 
 const { Router } = require("express");
 
 const router = Router();
 
 const recetasCtrl = require("../controllers/recetas");
+
 
 /*---------- Public Routes ----------*/
 
@@ -44,12 +46,21 @@ router.post("/",
   check("tipo", "El tipo es obligatorio").not().isEmpty(),
   validateField,
 ],
+checkAuth,
 recetasCtrl.addReceta);
 
 
-
-
 // actualizar receta
+router.put("/", 
+[
+  check("idReceta", "El idReceta es obligatorio").not().isEmpty(),
+  check("nombre", "El nombre es obligatorio").not().isEmpty(),
+  check("descripcion", "La descripcion es obligatorio").not().isEmpty(),
+  check("tipo", "El tipo es obligatorio").not().isEmpty(),
+  validateField,
+],
+checkAuth,
+recetasCtrl.updateReceta);
 
 
 // eliminar receta
@@ -58,6 +69,7 @@ router.delete("/",
   check("idReceta", "El idReceta es obligatorio").not().isEmpty(),
   validateField,
 ],
+checkAuth,
 recetasCtrl.deleteReceta);
 
 
@@ -69,6 +81,7 @@ router.post("/step",
   check("texto", "El texto es obligatorio").not().isEmpty(),
   validateField,
 ],
+checkAuth,
 recetasCtrl.addRecetaStep);
 
 
@@ -79,6 +92,7 @@ router.put("/step",
   check("texto", "El texto es obligatorio").not().isEmpty(),
   validateField,
 ],
+checkAuth,
 recetasCtrl.updateRecetaStep);
 
 
@@ -88,6 +102,7 @@ router.delete("/step",
   check("idPaso", "El idPaso es obligatorio").not().isEmpty(),
   validateField,
 ],
+checkAuth,
 recetasCtrl.deleteRecetaStep);
 
 
@@ -102,6 +117,7 @@ router.post("/step/multimedia",
   check("urlContenido", "El urlContenido es obligatorio").not().isEmpty(),
   validateField,
 ],
+checkAuth,
 recetasCtrl.addStepMultimedia);
 
 // eliminar (solo logicamente) el contenido multimedia del paso de receta
@@ -110,6 +126,7 @@ router.delete("/step/multimedia",
   check("idContenido", "El idContenido es obligatorio").not().isEmpty(),
   validateField,
 ],
+checkAuth,
 recetasCtrl.deleteStepMultimedia);
 
 module.exports = router;
