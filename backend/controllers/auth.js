@@ -2,8 +2,11 @@ var nodemailer = require("nodemailer");
 const { google } = require("googleapis");
 const { response } = require("express");
 const bcrypt = require("bcrypt");
+const otpGenerator = require("otp-generator");
 const { generateJWT, verifyJWT } = require("../helpers/jwt");
 const UserRepository = require("../db/repository/UserRepository");
+
+const path = require("path");
 
 var constants = require("../common/constants");
 
@@ -21,14 +24,17 @@ const signup = async (req, res = response) => {
   try {
     const { nickname, mail, nombre, password, repeatPassword, tipo_usuario } =
       req.body;
-    if (!["Visitante", "Alumno"].includes(tipo_usuario)) {
+    if (!constants.RoleEnum.includes(tipo_usuario)) {
       return res
         .status(400)
-        .json({ err: `'${tipo_usuario} no es un tipo de usuario valido'` });
+        .json({
+          status: "error",
+          message: `'${tipo_usuario} no es un tipo de usuario valido'`,
+        });
     }
 
     if (password !== repeatPassword) {
-      return res.status(401).json({ err: "Las contrasenas no coinciden" });
+      return res.status(400).json({ err: "Las contrasenas no coinciden" });
     }
 
     // buscamos por mail
@@ -67,7 +73,7 @@ const signup = async (req, res = response) => {
       },
     });
 
-    // TODO axel: hacer que sea un token de un solo uso
+    // TODO axel: hacer que sea un token de un solo uso -- cargar en la db, agregar marca de registro completo, volar de la db.
     const token = await generateJWT({ idusuario: user.idusuario });
 
     const mailOptions = {
@@ -77,17 +83,19 @@ const signup = async (req, res = response) => {
       text:
         `Hola! Te escribimos de Recetas. \n
         has registrado una cuenta con este mail, si no fuiste tu, ignoralo. \n
-        Sigue este link: http://localhost:8080/signup/complete?token=` + token,
+        Sigue este link: http://localhost:8080/auth/complete?token=` + token,
     };
 
     try {
       const result = await transport.sendMail(mailOptions);
 
       if (result.accepted.length > 0) {
-        return res.status(200).json({
-          result: "ok",
-          message: "Revisa tu correo para completar el registro",
-        });
+        return res
+          .status(200)
+          .json({
+            result: "ok",
+            message: "Revisa tu correo para completar el registro",
+          });
       }
 
       return res
@@ -101,6 +109,7 @@ const signup = async (req, res = response) => {
     return res.status(500).json({
       ok: false,
       message: "Unexpected error",
+      stack: error.stack,
     });
   }
 };
@@ -116,22 +125,23 @@ const completeSignUp = async (req, res = response) => {
 
     UserRepository.getUserByidusuario(decoded.idusuario).then(async (user) => {
       if (!user) {
-        return res
-          .status(400)
-          .json({ err: `'${tipo_usuario} no es un tipo de usuario valido'` });
+        /* return res
+                    .status(401)
+                    .json({ err: "no existe el usuario" }); */
+        return res.sendFile(
+          path.resolve("public/signup-complete-fail-02.html")
+        );
       }
 
       let bret = await UserRepository.completeUserSignUp(decoded.idusuario);
       if (!bret) {
-        return res.status(500).json({
-          ok: false,
-          message: "Unexpected error completing sign up",
-        });
+        return res.sendFile(
+          path.resolve("public/signup-complete-fail-03.html")
+        );
       }
 
-      const token = await generateJWT({ idusuario: decoded.idusuario });
-
-      return res.json({ ok: true, token: token });
+      // const token = await generateJWT({ "idusuario": decoded.idusuario });
+      return res.sendFile(path.resolve("public/signup-complete-success.html"));
     });
   } catch (error) {
     return res.status(500).json({
@@ -149,15 +159,15 @@ const login = async (req, res = response) => {
     if (!usuario) {
       return res.status(400).json({
         ok: false,
-        message: "User incorrect",
+        message: "User or password incorrect",
       });
     }
 
     const validPassword = bcrypt.compareSync(password, usuario.getPassword());
-    if (!validPassword) {
+    if (!validPassword || usuario.getHabilitado() != "Si") {
       return res.status(400).json({
         ok: false,
-        message: `password incorrect ${validPassword} - ${usuario.getHabilitado()}`,
+        message: "User or password incorrect",
       });
     }
 
@@ -186,9 +196,104 @@ const renew = async (req, res = response) => {
   });
 };
 
+const sendOTP = async (req, res) => {
+  try {
+    let foundUser = await UserRepository.getUserByMail(req.body.email);
+    if (foundUser) {
+      let otp = otpGenerator.generate(6, {
+        upperCaseAlphabets: false,
+        specialChars: false,
+        digits: true,
+        lowerCaseAlphabets: false,
+      });
+
+      console.log("Data from User", foundUser);
+      await UserRepository.genOTP(foundUser.uid, otp);
+      //new code
+      const mailOptions = {
+        ...constants.mailoptions,
+        from: "recetas",
+        to: req.body.mail,
+        text:
+          `Hola! Te escribimos de Recetas. \n
+          Por favor, ingrese este código para recumerar tu contraseña: ` + otp,
+      };
+
+      try {
+        const result = await transport.sendMail(mailOptions);
+
+        if (result.accepted.length > 0) {
+          return res
+            .status(200)
+            .json({
+              result: "ok",
+              message: "Revisa tu correo para completar el registro",
+            });
+        }
+
+        return res
+          .status(500)
+          .json({ result: "error", message: result.response });
+      } catch (error) {
+        console.log(error);
+        return json.send(error);
+      }
+      // end new code
+      res.send({ sended: true, message: "Se ha enviado correctamente" });
+    } else {
+      res.send({ sended: false, statusCode: 500, message: "Revise el email " });
+    }
+  } catch {
+    res.send("Internal server error");
+  }
+};
+
+const validateOTP = async (req, res) => {
+  try {
+    let foundUser = await UserRepository.getUserByMail(req.body.email);
+    console.log(foundUser);
+    if (foundUser) {
+      if (foundUser.otp == req.body.otp) {
+        res.send({
+          reset: true,
+          statusCode: 200,
+          message: "Codigo validado exitosamente",
+        });
+      } else {
+        res.send({
+          statusCode: 500,
+          message: "No se ha podido validar su codigo",
+        });
+      }
+    }
+  } catch {
+    res.send("Internal server error");
+  }
+};
+
+const resetPassword = async (req, res) => {
+  try {
+    let foundUser = await UserRepository.getUserByMail(req.body.email);
+    console.log(foundUser);
+    if (foundUser) {
+      let hashPassword = await bcrypt.hash(req.body.password, 10);
+      await UserRepository.updatePassword(foundUser.uid, hashPassword);
+      res.send({
+        reset: true,
+        message: "El cambio se ha realizado exitosamente",
+      });
+    }
+  } catch {
+    res.send("Internal server error");
+  }
+};
+
 module.exports = {
   signup,
   completeSignUp,
   login,
   renew,
+  sendOTP,
+  validateOTP,
+  resetPassword,
 };

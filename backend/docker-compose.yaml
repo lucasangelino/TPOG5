@@ -2,6 +2,7 @@ version: "3.1"
 
 services:
   recetas.app:
+    container_name: recetas.app
     image: backend-recetas:latest
     build:
       context: ./
@@ -17,6 +18,7 @@ services:
     depends_on:
       - recetas.pg
   recetas.pg:
+    container_name: recetas.pg
     image: postgres:latest
     volumes:
       - /shared_folder/postgresql:/var/lib/postgresql

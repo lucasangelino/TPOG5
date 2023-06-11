@@ -59,7 +59,12 @@ class RecetaBuilder {
   negativeCount(negativeCount) {
     this.entity.negativeCount = negativeCount;
     return this;
-  } 
+  }
+
+  estado(estado) {
+    this.entity.estado = estado;
+    return this;
+  }
 
   build() {
     return this.entity;
@@ -68,17 +73,18 @@ class RecetaBuilder {
   buildWithRecord(record) {
 
     return new RecetaBuilder()
-      .idReceta(record.idReceta)
+      .idReceta(record.idreceta)
       .idusuario(record.idusuario)
       .nombre(record.nombre)
 			.descripcion(record.descripcion)
 			.foto(record.foto)
       .porciones(record.porciones)
-			.cantidadPersonas(record.cantidadPersonas)
-			.idTipo(record.idTipo)
+			.cantidadPersonas(record.cantidadpersonas)
+			.idTipo(record.idtipo)
       .rating(record.rating)
-      .positiveCount(record.positiveCount)
-      .negativeCount(record.negativeCount)
+      .positiveCount(record.positivecount)
+      .negativeCount(record.negativecount)
+      .estado(record.estado)
 			.build();
   }
 }

@@ -12,6 +12,7 @@ class Receta {
 		this.rating = 0
 		this.positiveCount = 0
 		this.negativeCount = 0
+		this.estado = 0
 	}
 
 	getIdReceta() {
@@ -43,20 +44,24 @@ class Receta {
 	}
 
     getIdTipo() {
-        return this.idTipo
+        return this.idTipo;
     }
 
 	getRating() {
-        return this.rating
+        return this.rating;
     }
 
 	getPositiveCount() {
-        return this.positiveCount
+        return this.positiveCount;
     }
 
 	getNegativeCount() {
-        return this.negativeCount
+        return this.negativeCount;
     }
+
+	getEstado() {
+		return this.estado;
+	}
 }
 
 

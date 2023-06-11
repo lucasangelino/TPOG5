@@ -1,5 +1,7 @@
 const { pg_pool } = require('../database')
 const RecetaBuilder = require("../../helpers/builder/RecetaBuilder.js");
+const UserRepository = require('./UserRepository.js')
+const TipoRepository = require('./TipoRepository.js')
 
 /**
 * Creates User with the given data
@@ -29,7 +31,7 @@ const getRecetas = async ({receta_id, usuario_id, nombre, tipo_receta, rating_mi
 			}
 		} */
 		
-		query = query + "WHERE 0 = 0 ";
+		query = query + "WHERE r.estado = 1 ";
 		
 		if (receta_id) {
 			query = query + ` AND r.idReceta = '${receta_id}' `
@@ -82,15 +84,37 @@ const getRecetas = async ({receta_id, usuario_id, nombre, tipo_receta, rating_mi
 
 		const records = await pg_pool.query(query);
 
+		let result = [];
+		for (let index = 0; index < records.rows.length; index++) {
+			result.push(new RecetaBuilder().buildWithRecord(records.rows[index]));
+		}
 
-		return records.rows;
+		return result;
+	} catch (error) {
+		return null;
+	}
+};
+
+// Agrega receta
+const addReceta = async ({idUsuario, nombre,descripcion,tipo,foto,porciones,cantidadPersonas}) => {
+	try {
 
 
+		let type = await TipoRepository.getTipoByName(tipo);
+
+		// no existe el tipo lo creo
+		if (!type) {
+			type = await TipoRepository.addNewTipo(tipo);
+		}
+
+		let query = ` INSERT INTO recetas (idUsuario, nombre, descripcion, foto, porciones, cantidadPersonas, idTipo) `
+		query = query  + ` VALUES('${idUsuario}', '${nombre}', '${descripcion}', '${foto}', '${porciones}', '${cantidadPersonas}', '${type.idTipo}') RETURNING *`;
+		const records = await pg_pool.query(query);
 		if (records.rows.length >= 1) {
 			let record = records.rows[0];
 
-			let user = new RecetaBuilder().buildWithRecord(record);
-			return user;
+			let receta = new RecetaBuilder().buildWithRecord(record);
+			return receta;
 		} else {
 			return null;
 		}
@@ -99,28 +123,63 @@ const getRecetas = async ({receta_id, usuario_id, nombre, tipo_receta, rating_mi
 	}
 };
 
-const addRecetas = async ({}) => {
+// actualiza receta existente
+const updateReceta = async (body) => {
 	try {
-/* 
-	
+
+		var clone = JSON.parse(JSON.stringify(body));
+		delete clone.idReceta;
+		delete clone.idUsuario;
+		delete clone.tipo;
+
+		let query = ` UPDATE recetas SET `
+
+		// generar parte del SET dinamicamente
+		let i = 1;
+		for (let key in clone) {
+			query = query + `${key} = '${body[key]}'`
+			if (i != Object.keys(clone).length) {
+				query = query + ", "
+			}
+			i++;
+		}
+
+		query = query + ` WHERE idReceta = '${body.idReceta}' RETURNING * `;
+		
 		const records = await pg_pool.query(query);
 		if (records.rows.length >= 1) {
 			let record = records.rows[0];
 
-			let user = new RecetaBuilder().buildWithRecord(record);
-			return user;
+			let receta = new RecetaBuilder().buildWithRecord(record);
+			return receta;
 		} else {
 			return null;
-		} */
-
-		return null;
+		}
 	} catch (error) {
 		return null;
+	}
+};
+
+// Elimina receta existente
+const deleteReceta = async ({idReceta}) => {
+	try {
+
+		let query = ` UPDATE recetas SET estado = 0 WHERE idReceta = '${idReceta}' `;
+		const records = await pg_pool.query(query);
+		if (records.rowCount >= 1) {
+			return true
+		} else {
+			return false;
+		}
+	} catch (error) {
+		return false;
 	}
 };
 
 
 module.exports = {
 	getRecetas,
-	addRecetas
+	addReceta,
+	updateReceta,
+	deleteReceta,
 };
