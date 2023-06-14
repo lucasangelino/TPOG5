@@ -8,6 +8,7 @@ const TipoRepository = require("../db/repository/TipoRepository.js");
 const MultimediaRepository = require("../db/repository/MultimediaRepository.js");
 const UnidadRepository = require("../db/repository/UnidadRepository.js");
 const UtilizadoRepository = require("../db/repository/UtilizadoRepository.js");
+const Utilizado = require("../models/Utilizado");
 
 // Metodo general que es utilizado en dos endpoints distintos ya que es configurable el metodo de ordenamiento, por cuales campos filtrar
 // y el paginado que se desea.
@@ -178,6 +179,89 @@ const addRecetaIngrediente = async (req, res) => {
 
     // TODO convertir utilizado primary key en idReceta+idIngrediente
     let utilizado = await UtilizadoRepository.addUtilizado(body);
+    return res.status(200).json({
+      status: "ok",
+      data: utilizado,
+    });
+  } catch (e) {
+    return res
+      .status(e.statusCode)
+      .json({ status: e.name, message: e.message });
+  }
+};
+
+
+// Usuario elimina ingrediente utilizado en receta
+const getRecetaIngrediente = async (req, res) => {
+  const body = req.body;
+  body.idUsuario = req.idUsuario;
+
+    // TODO validar ownership de la receta para el usuario
+
+  try {
+
+    let utilizado = await UtilizadoRepository.getUtilizadoById(body.idUtilizado);
+    if (!utilizado) {
+      return res.status(404).json({
+        status: "error",
+        message: "no se encontro ingrediente utilizado",
+      });
+    }
+
+    return res.status(200).json({
+      status: "ok",
+      data: utilizado,
+    });
+  } catch (e) {
+    return res
+      .status(e.statusCode)
+      .json({ status: e.name, message: e.message });
+  }
+};
+
+// Usuario actualiza ingrediente utilizado en receta
+const updateRecetaIngrediente = async (req, res) => {
+  const body = req.body;
+  body.idUsuario = req.idUsuario;
+
+   // TODO validar ownership de la receta para el usuario
+
+  try {
+    let utilizado = await UtilizadoRepository.getUtilizadoById(body.idUtilizado);
+    if (!utilizado) {
+      return res.status(404).json({
+        status: "error",
+        message: "No se encontro el ingrediente utilizado"
+      });
+    }
+
+    // si el ingrediente existe lo obtengo, sino lo creo
+    let ingrediente = await IngredienteRepository.getIngredienteByNombre(body.nombreIngrediente);
+    if (!ingrediente) {
+      ingrediente = await IngredienteRepository.addIngrediente(body.nombreIngrediente);
+    }
+
+    body.idIngrediente = ingrediente.getIdIngrediente();
+
+    // obtengo la unidad
+    let unidad = await UnidadRepository.getUnidadById(body.idUnidad);
+    if (!unidad) {
+      return res.status(400).json({
+        status: "error",
+        message: "No existe la unidad a la que se desea actualizar",
+      });
+    }
+
+    // actualizo
+    let result = await UtilizadoRepository.updateUtilizado(body);
+    if (!result) {
+      return res.status(500).json({
+        status: "error",
+        message: "No se pudo actualizar",
+      });
+    }
+
+    utilizado = await UtilizadoRepository.getUtilizadoById(body.idUtilizado);
     return res.status(200).json({
       status: "ok",
       data: utilizado,
@@ -435,6 +519,8 @@ module.exports = {
   updateReceta,
   deleteReceta,
   addRecetaIngrediente,
+  getRecetaIngrediente,
+  updateRecetaIngrediente,
   deleteRecetaIngrediente,
   getRecetaStepById,
   addRecetaStep,

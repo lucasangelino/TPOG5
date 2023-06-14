@@ -39,6 +39,22 @@ const getUtilizadoById = async (idUtilizado) => {
 	}
 };
 
+const updateUtilizado = async ({idUtilizado, idIngrediente, idUnidad, cantidad, observaciones}) => {
+	try {
+
+		let query = ` UPDATE utilizados SET idIngrediente = '${idIngrediente}', `
+		query = query + `idUnidad = '${idUnidad}', cantidad = '${cantidad}', observaciones = '${observaciones}'  WHERE idUtilizado = '${idUtilizado}' `;
+		const records = await pg_pool.query(query);
+		if (records.rowCount >= 1) {
+			return true
+		} else {
+			return false;
+		}
+	} catch (error) {
+		return false;
+	}
+};
+
 
 const deleteUtilizado = async (idUtilizado) => {
 	try {
@@ -59,5 +75,6 @@ const deleteUtilizado = async (idUtilizado) => {
 module.exports = {
 	addUtilizado,
 	getUtilizadoById,
+	updateUtilizado,
 	deleteUtilizado,
 };

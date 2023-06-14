@@ -84,6 +84,27 @@ router.post("/ingrediente",
 checkAuth,
 recetasCtrl.addRecetaIngrediente);
 
+// eliminar ingrediente de receta
+router.get("/ingrediente", 
+[
+  check("idUtilizado", "El idUtilizado es obligatorio").not().isEmpty(),
+  validateField,
+],
+checkAuth,
+recetasCtrl.getRecetaIngrediente);
+
+// actualiza ingrediente de receta
+router.put("/ingrediente", 
+[
+  check("idUtilizado", "El idUtilizado es obligatorio").not().isEmpty(),
+  check("idUnidad", "El idUtilizado es obligatorio").not().isEmpty(),
+  check("nombreIngrediente", "El idUtilizado es obligatorio").not().isEmpty(),
+  check("cantidad", "El idUtilizado es obligatorio").not().isEmpty(),
+  validateField,
+],
+checkAuth,
+recetasCtrl.updateRecetaIngrediente);
+
 
 // eliminar ingrediente de receta
 router.delete("/ingrediente", 
