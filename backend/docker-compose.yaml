@@ -12,7 +12,8 @@ services:
       - .:/app
     ports:
       - 8080:8080
-    command: node --inspect index.js
+      - 9229:9229
+    command: node --inspect=0.0.0.0:9229 index.js
     environment:
       - PORT=8080
     depends_on:
