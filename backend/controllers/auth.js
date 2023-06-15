@@ -98,9 +98,7 @@ const signup = async (req, res = response) => {
           });
       }
 
-      return res
-        .status(500)
-        .json({ result: "error", message: result.response });
+      return res.status(500).json({ status: "error", message: result.response });
     } catch (error) {
       console.log(error);
       return json.send(error);

@@ -11,7 +11,7 @@ const PasoCompletoBuilder = require('../../helpers/builder/PasoCompletoBuilder.j
 * @returns account created
 */
 const getRecetas = async ({receta_id, usuario_id, nombre, tipo_receta, rating_min,
-	con_ingredientes, sin_ingredientes, completa, order_by, order_type, skip, limit}) => {
+	con_ingredientes, sin_ingredientes, order_by, order_type, skip, limit}) => {
 	try {
 
 		// Se filtra por los campos recibidos en el body.
@@ -76,29 +76,13 @@ const getRecetas = async ({receta_id, usuario_id, nombre, tipo_receta, rating_mi
 
 			let receta = new RecetaBuilder().buildWithRecord(record);
 
-			// construimos el VO de paso completo
-			let pasosCompletos = [];
-
 			// obtenemos los pasos asociados a la receta
 			let pasos = await PasoRepository.getPasosByIdReceta(receta.idReceta);
-			for (const paso of pasos) {
-
-				// obtenemos la multimedia asociada al paso
-				let multimedia = await MultimediaRepository.getMultimediaByIdPaso(paso.getIdPaso());
-
-				// construimos VO con los datos
-				let pasoCompleto = new PasoCompletoBuilder()
-				.paso(paso)
-				.multimedia(multimedia)
-				.build();
-
-				pasosCompletos.push(pasoCompleto);
-			}
 
 			// construimos VO de receta completa
 			let recetaCompleta = new RecetaCompletaBuilder()
 			.receta(receta)
-			.pasos(pasosCompletos)
+			.pasos(pasos)
 			.build();
 
 			result.push(recetaCompleta);
@@ -106,14 +90,17 @@ const getRecetas = async ({receta_id, usuario_id, nombre, tipo_receta, rating_mi
 
 		return result;
 	} catch (error) {
-		return null;
+		return res.status(500).json({
+			status: "error",
+			message: "Unexpected error",
+			stack: error.stack,
+		  });
 	}
 };
 
 // Agrega receta
 const addReceta = async ({idUsuario, nombre,descripcion,tipo,foto,porciones,cantidadPersonas}) => {
 	try {
-
 
 		let type = await TipoRepository.getTipoByName(tipo);
 
@@ -134,7 +121,11 @@ const addReceta = async ({idUsuario, nombre,descripcion,tipo,foto,porciones,cant
 			return null;
 		}
 	} catch (error) {
-		return null;
+		return res.status(500).json({
+			status: "error",
+			message: "Unexpected error",
+			stack: error.stack,
+		  });
 	}
 };
 

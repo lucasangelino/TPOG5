@@ -1,7 +1,9 @@
 const { pg_pool } = require('../database')
+const MultimediaRepository = require("./MultimediaRepository.js");
 const PasoBuilder = require("../../helpers/builder/PasoBuilder.js");
+const PasoCompletoBuilder = require("../../helpers/builder/PasoCompletoBuilder.js");
 
-const getPasoById = async ({idPaso}) => {
+const getPasoById = async (idPaso) => {
 	try {
 
 		let query = ` SELECT * FROM pasos WHERE idPaso = '${idPaso}' `;
@@ -10,7 +12,17 @@ const getPasoById = async ({idPaso}) => {
 			let record = records.rows[0];
 
 			let paso = new PasoBuilder().buildWithRecord(record);
-			return paso;
+
+			// obtenemos la multimedia asociada al paso
+			let multimedia = await MultimediaRepository.getMultimediaByIdPaso(paso.getIdPaso());
+
+			// construimos el VO completo con los datos
+			let pasoCompleto = new PasoCompletoBuilder()
+			.paso(paso)
+			.multimedia(multimedia)
+			.build();
+
+			return pasoCompleto;
 		} else {
 			return null;
 		}
@@ -26,8 +38,20 @@ const getPasosByIdReceta = async (idReceta) => {
 		const records = await pg_pool.query(query);
 		
 		let result = [];
-		for (let index = 0; index < records.rows.length; index++) {
-			result.push(new PasoBuilder().buildWithRecord(records.rows[index]));
+		for (const record of records.rows) {
+
+			let paso = new PasoBuilder().buildWithRecord(record);
+
+			// obtenemos la multimedia asociada al paso
+			let multimedia = await MultimediaRepository.getMultimediaByIdPaso(paso.getIdPaso());
+
+			// construimos el VO completo con los datos
+			let pasoCompleto = new PasoCompletoBuilder()
+			.paso(paso)
+			.multimedia(multimedia)
+			.build();
+
+			result.push(pasoCompleto);
 		}
 		return result;
 
@@ -74,8 +98,6 @@ const deletePaso = async ({idPaso}) => {
 
 		let query = ` UPDATE pasos SET estado = 0 WHERE idPaso = '${idPaso}' `;
 		const records = await pg_pool.query(query);
-
-
 		if (records.rowCount >= 1) {
 			return true
 		} else {

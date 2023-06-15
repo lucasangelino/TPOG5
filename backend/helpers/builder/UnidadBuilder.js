@@ -24,7 +24,7 @@ class UnidadBuilder {
   buildWithRecord(record) {
 
     return new UnidadBuilder()
-      .idUnidad(record.idUnidad)
+      .idUnidad(record.idunidad)
       .descripcion(record.descripcion)
 			.build();
   }

@@ -1,6 +1,23 @@
 const { pg_pool } = require('../database')
 const UnidadBuilder = require("../../helpers/builder/UnidadBuilder.js");
 
+const getUnidades = async () => {
+	try {
+
+		let query = ` SELECT * FROM unidades `;
+		const records = await pg_pool.query(query);
+
+		let unidades = [];
+		for(const record of records.rows) {
+			unidades.push(new UnidadBuilder().buildWithRecord(record));
+		}
+
+		return unidades;
+	} catch (error) {
+		return [];
+	}
+};
+
 const getUnidadById = async (idUnidad) => {
 	try {
 
@@ -30,14 +47,15 @@ const getUnidadByDescripcion = async ({descripcion}) => {
 			let ingrediente = new UnidadBuilder().buildWithRecord(record);
 			return ingrediente;
 		} else {
-			return null;
+			return [];
 		}
 	} catch (error) {
-		return null;
+		return [];
 	}
 };
 
 module.exports = {
+	getUnidades,
 	getUnidadById,
 	getUnidadByDescripcion,
 };

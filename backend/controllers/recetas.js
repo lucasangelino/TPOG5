@@ -318,7 +318,7 @@ const getRecetaStepById = async (req, res) => {
   body.idUsuario = req.idUsuario;
 
   try {
-    let paso = await PasoRepository.getPasoById({idPaso: body.idPaso});
+    let paso = await PasoRepository.getPasoById(body.idPaso);
     if (!paso) {
       return res.status(400).json({
         status: "error",
@@ -434,7 +434,7 @@ const addStepMultimedia = async (req, res) => {
   }
   
   // validar que el paso existe
-  let paso = await PasoRepository.getPasoById({idPaso: body.idPaso});
+  let paso = await PasoRepository.getPasoById(body.idPaso);
   if (!paso) {
     return res.status(404).json({
       status: "error",

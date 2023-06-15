@@ -22,6 +22,7 @@ class Server {
     this.app.use(express.json());
     this.app.use("/auth", require("./router/auth"));
     this.app.use("/receta", require("./router/recetas"));
+    this.app.use("/unidad", require("./router/unidad"));
   }
 
   execute() {
