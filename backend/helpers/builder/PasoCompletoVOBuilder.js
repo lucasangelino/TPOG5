@@ -1,5 +1,5 @@
 const PasoCompletoVO = require("../../models/vo/PasoCompletoVO");
-class PasoCompletoBuilder {
+class PasoCompletoVOBuilder {
 
   constructor() {
     this.entity = new PasoCompletoVO();
@@ -25,4 +25,4 @@ class PasoCompletoBuilder {
 
 }
 
-module.exports = PasoCompletoBuilder;
+module.exports = PasoCompletoVOBuilder;

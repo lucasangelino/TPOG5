@@ -1,6 +1,6 @@
 const RecetaCompletaVO = require("../../models/vo/RecetaCompletaVO.js");
 
-class RecetaCompletaBuilder {
+class RecetaCompletaVOBuilder {
 
   constructor() {
     this.entity = new RecetaCompletaVO();
@@ -37,4 +37,4 @@ class RecetaCompletaBuilder {
   }
 }
 
-module.exports = RecetaCompletaBuilder;
+module.exports = RecetaCompletaVOBuilder;

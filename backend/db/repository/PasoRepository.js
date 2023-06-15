@@ -1,7 +1,7 @@
 const { pg_pool } = require('../database')
 const MultimediaRepository = require("./MultimediaRepository.js");
 const PasoBuilder = require("../../helpers/builder/PasoBuilder.js");
-const PasoCompletoBuilder = require("../../helpers/builder/PasoCompletoBuilder.js");
+const PasoCompletoVOBuilder = require("../../helpers/builder/PasoCompletoVOBuilder.js");
 
 const getPasoById = async (idPaso) => {
 	try {
@@ -17,7 +17,7 @@ const getPasoById = async (idPaso) => {
 			let multimedia = await MultimediaRepository.getMultimediaByIdPaso(paso.getIdPaso());
 
 			// construimos el VO completo con los datos
-			let pasoCompleto = new PasoCompletoBuilder()
+			let pasoCompleto = new PasoCompletoVOBuilder()
 			.paso(paso)
 			.multimedia(multimedia)
 			.build();
@@ -46,7 +46,7 @@ const getPasosByIdReceta = async (idReceta) => {
 			let multimedia = await MultimediaRepository.getMultimediaByIdPaso(paso.getIdPaso());
 
 			// construimos el VO completo con los datos
-			let pasoCompleto = new PasoCompletoBuilder()
+			let pasoCompleto = new PasoCompletoVOBuilder()
 			.paso(paso)
 			.multimedia(multimedia)
 			.build();

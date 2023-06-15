@@ -1,5 +1,6 @@
 const UnidadRepository = require('../db/repository/UnidadRepository.js')
-const ConversionRepository = require('../db/repository/ConversionRepository.js')
+const ConversionRepository = require('../db/repository/ConversionRepository.js');
+const ConversionVOBuilder = require('../helpers/builder/ConversionVOBuilder.js');
 
 
 const getUnidades = async (req, res) => {
@@ -57,19 +58,40 @@ const convertirUnidad = async (req, res) => {
 
     let {idUnidadOrigen, idUnidadDestino, cantidadOrigen} = req.query;
 
+    let unidadOrigen = await UnidadRepository.getUnidadById(idUnidadOrigen);
+    let unidadDestino = await UnidadRepository.getUnidadById(idUnidadDestino);
+
+    // La misma unidad
     if (idUnidadOrigen == idUnidadDestino) {
+      
+
+      let result = new ConversionVOBuilder()
+      .unidadOrigen(unidadOrigen)
+      .unidadDestino(unidadDestino)
+      .cantidadOrigen(cantidadOrigen)
+      .cantidadConvertida(cantidadOrigen)
+      .build();
+
       return res.status(200).json({
         status: "ok",
-        data: cantidadOrigen,
+        data: result,
       });
     }
 
     let conversion = await ConversionRepository.getConversion(idUnidadOrigen, idUnidadDestino);
     if(conversion) {
 
+      let result = new ConversionVOBuilder()
+      .idConversion(conversion.getIdConversion())
+      .unidadOrigen(unidadOrigen)
+      .unidadDestino(unidadDestino)
+      .cantidadOrigen(cantidadOrigen)
+      .cantidadConvertida(cantidadOrigen * conversion.getFactorConversiones())
+      .build();
+
       return res.status(200).json({
         status: "ok",
-        data: cantidadOrigen * conversion.getFactorConversiones(),
+        data: result,
       });
     }
 
@@ -82,9 +104,17 @@ const convertirUnidad = async (req, res) => {
       });
     }
 
+    let result = new ConversionVOBuilder()
+    .idConversion(conversion.getIdConversion())
+    .unidadOrigen(unidadOrigen)
+    .unidadDestino(unidadDestino)
+    .cantidadOrigen(cantidadOrigen)
+    .cantidadConvertida(cantidadOrigen / conversion.getFactorConversiones())
+    .build();
+
     return res.status(200).json({
       status: "ok",
-      data: cantidadOrigen / conversion.getFactorConversiones(),
+      data: result,
     });
   } catch (error) {
     return res.status(500).json({

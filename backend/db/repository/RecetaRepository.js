@@ -1,6 +1,6 @@
 const { pg_pool } = require('../database')
 const RecetaBuilder = require("../../helpers/builder/RecetaBuilder.js");
-const RecetaCompletaBuilder = require("../../helpers/builder/RecetaCompletaBuilder.js");
+const RecetaCompletaVOBuilder = require("../../helpers/builder/RecetaCompletaVOBuilder.js");
 const TipoRepository = require('./TipoRepository.js')
 const PasoRepository = require('./PasoRepository')
 const UtilizadoRepository = require('./UtilizadoRepository');
@@ -82,7 +82,7 @@ const getRecetas = async ({receta_id, usuario_id, nombre, tipo_receta, rating_mi
 			let ingredientes = await UtilizadoRepository.getUtilizadosByIdReceta(receta.idReceta);
 
 			// construimos VO de receta completa
-			let recetaCompleta = new RecetaCompletaBuilder()
+			let recetaCompleta = new RecetaCompletaVOBuilder()
 			.receta(receta)
 			.pasos(pasos)
 			.ingredientes(ingredientes)
