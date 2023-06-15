@@ -19,6 +19,21 @@ const getMultimediaById = async ({idContenido}) => {
 	}
 };
 
+const getMultimediaByIdPaso = async (idPaso) => {
+	try {
+
+		let query = ` SELECT * FROM multimedia WHERE idPaso = '${idPaso}' `;
+		const records = await pg_pool.query(query);
+		let result = [];
+		for (let index = 0; index < records.rows.length; index++) {
+			result.push(new MultimediaBuilder().buildWithRecord(records.rows[index]));
+		}
+		return result;
+	} catch (error) {
+		return null;
+	}
+};
+
 const addMultimedia = async ({idPaso, tipoContenido, extension, urlContenido}) => {
 	try {
 
@@ -56,6 +71,7 @@ const deleteMultimedia = async ({idContenido}) => {
 
 module.exports = {
 	getMultimediaById,
+	getMultimediaByIdPaso,
 	addMultimedia,
 	deleteMultimedia
 };

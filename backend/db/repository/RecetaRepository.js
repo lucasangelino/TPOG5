@@ -1,37 +1,21 @@
 const { pg_pool } = require('../database')
 const RecetaBuilder = require("../../helpers/builder/RecetaBuilder.js");
-const UserRepository = require('./UserRepository.js')
+const RecetaCompletaBuilder = require("../../helpers/builder/RecetaCompletaBuilder.js");
 const TipoRepository = require('./TipoRepository.js')
+const PasoRepository = require('./PasoRepository')
+const MultimediaRepository = require('./MultimediaRepository');
+const PasoCompletoBuilder = require('../../helpers/builder/PasoCompletoBuilder.js');
 
 /**
 * Creates User with the given data
 * @returns account created
 */
 const getRecetas = async ({receta_id, usuario_id, nombre, tipo_receta, rating_min,
-	con_ingredientes, sin_ingredientes, order_by, order_type, skip, limit}) => {
+	con_ingredientes, sin_ingredientes, completa, order_by, order_type, skip, limit}) => {
 	try {
 
 		// Se filtra por los campos recibidos en el body.
-		let query = "SELECT r.* FROM recetas r ";
-
-		// Se lee la lista de ingredientes a incluir o excluir
-/* 		let ingredientes = con_ingredientes;
-		let excluidos = sin_ingredientes;
-		if ((ingredientes && ingredientes.length > 0)
-			|| (excluidos && excluidos.length > 0) ) {
-		
-			query = query + ` JOIN utilizados u ON r.idreceta = u.idreceta `
-			
-			if(ingredientes && ingredientes.length > 0) {
-				query = query + ` AND u.idingrediente IN (${ingredientes}) `
-			}
-		
-			if(excluidos && excluidos.length > 0) {
-				query = query + ` AND u.idingrediente NOT IN (${excluidos}) `
-			}
-		} */
-		
-		query = query + "WHERE r.estado = 1 ";
+		let query = "SELECT r.* FROM recetas r WHERE r.estado = 1 ";		
 		
 		if (receta_id) {
 			query = query + ` AND r.idReceta = '${receta_id}' `
@@ -54,12 +38,13 @@ const getRecetas = async ({receta_id, usuario_id, nombre, tipo_receta, rating_mi
 			query = query + ` AND r.rating > '${rating_min}' `
 		}
 
+		// con_ingredientes contiene la lista de ingredientes que la receta debe tener
 		let ingredientes = con_ingredientes;
-		
 		if(ingredientes && ingredientes.length > 0) {
 			query = query + ` AND EXISTS (SELECT * FROM utilizados u WHERE u.idReceta = r.idReceta AND u.idingrediente IN (${ingredientes})) `
 		}
 
+		// sin_ingredientes contiene los ingredientes que deben ser excluidos
 		let excluidos = sin_ingredientes;
 		if(excluidos && excluidos.length > 0) {
 			query = query + ` AND NOT EXISTS (SELECT * FROM utilizados u WHERE u.idReceta = r.idReceta AND u.idingrediente IN (${excluidos})) `
@@ -82,11 +67,41 @@ const getRecetas = async ({receta_id, usuario_id, nombre, tipo_receta, rating_mi
 			query = query + ` LIMIT ${limit} `
 		}
 
+		// ejecuta query
 		const records = await pg_pool.query(query);
 
+		// obtenemos los resultados y creamos los value object de respuesta
 		let result = [];
-		for (let index = 0; index < records.rows.length; index++) {
-			result.push(new RecetaBuilder().buildWithRecord(records.rows[index]));
+		for (const record of records.rows) {
+
+			let receta = new RecetaBuilder().buildWithRecord(record);
+
+			// construimos el VO de paso completo
+			let pasosCompletos = [];
+
+			// obtenemos los pasos asociados a la receta
+			let pasos = await PasoRepository.getPasosByIdReceta(receta.idReceta);
+			for (const paso of pasos) {
+
+				// obtenemos la multimedia asociada al paso
+				let multimedia = await MultimediaRepository.getMultimediaByIdPaso(paso.getIdPaso());
+
+				// construimos VO con los datos
+				let pasoCompleto = new PasoCompletoBuilder()
+				.paso(paso)
+				.multimedia(multimedia)
+				.build();
+
+				pasosCompletos.push(pasoCompleto);
+			}
+
+			// construimos VO de receta completa
+			let recetaCompleta = new RecetaCompletaBuilder()
+			.receta(receta)
+			.pasos(pasosCompletos)
+			.build();
+
+			result.push(recetaCompleta);
 		}
 
 		return result;

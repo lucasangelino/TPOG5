@@ -19,6 +19,23 @@ const getPasoById = async ({idPaso}) => {
 	}
 };
 
+const getPasosByIdReceta = async (idReceta) => {
+	try {
+
+		let query = ` SELECT * FROM pasos WHERE idReceta = '${idReceta}' `;
+		const records = await pg_pool.query(query);
+		
+		let result = [];
+		for (let index = 0; index < records.rows.length; index++) {
+			result.push(new PasoBuilder().buildWithRecord(records.rows[index]));
+		}
+		return result;
+
+	} catch (error) {
+		return null;
+	}
+};
+
 const addPaso = async ({idReceta, nroPaso, texto}) => {
 	try {
 
@@ -42,8 +59,6 @@ const updatePasoById = async ({idPaso, texto}) => {
 
 		let query = ` UPDATE pasos SET texto = '${texto}' WHERE idPaso = '${idPaso}' `;
 		const records = await pg_pool.query(query);
-
-
 		if (records.rowCount >= 1) {
 			return true
 		} else {
@@ -74,6 +89,7 @@ const deletePaso = async ({idPaso}) => {
 module.exports = {
 	addPaso,
 	getPasoById,
+	getPasosByIdReceta,
 	updatePasoById,
 	deletePaso
 };
