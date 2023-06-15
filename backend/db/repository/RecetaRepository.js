@@ -90,17 +90,14 @@ const getRecetas = async ({receta_id, usuario_id, nombre, tipo_receta, rating_mi
 
 		return result;
 	} catch (error) {
-		return res.status(500).json({
-			status: "error",
-			message: "Unexpected error",
-			stack: error.stack,
-		  });
+		return [];
 	}
 };
 
 // Agrega receta
 const addReceta = async ({idUsuario, nombre,descripcion,tipo,foto,porciones,cantidadPersonas}) => {
 	try {
+
 
 		let type = await TipoRepository.getTipoByName(tipo);
 
@@ -121,11 +118,7 @@ const addReceta = async ({idUsuario, nombre,descripcion,tipo,foto,porciones,cant
 			return null;
 		}
 	} catch (error) {
-		return res.status(500).json({
-			status: "error",
-			message: "Unexpected error",
-			stack: error.stack,
-		  });
+		return null;
 	}
 };
 
