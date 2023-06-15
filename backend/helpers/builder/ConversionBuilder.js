@@ -33,10 +33,10 @@ class ConversionBuilder {
 
   buildWithRecord(record) {
 
-    return new ConversionBuilder() // TODO no es necesario hacer un new aca, sino un this.
+    return this 
       .idConversion(record.idconversion)
       .idUnidadOrigen(record.idunidadorigen)
-      .idUnidadDestino(idunidaddestino)
+      .idUnidadDestino(record.idunidaddestino)
       .factorConversiones(record.factorconversiones)
 			.build();
   }

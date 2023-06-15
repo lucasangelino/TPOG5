@@ -10,6 +10,11 @@ router.get(
 );
 
 router.get(
+    "/conversion",
+    unidadCtrl.convertirUnidad
+);
+
+router.get(
     "/:id",
     unidadCtrl.getUnidadById
 );
@@ -19,9 +24,6 @@ router.get(
     unidadCtrl.getUnidadesConvertibles
 );
 
-router.get(
-    "/conversion",
-    unidadCtrl.conversion
-);
+
 
 module.exports = router;

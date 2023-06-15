@@ -19,7 +19,7 @@ const getConversionById = async (idConversion) => {
 	}
 };
 
-const getUnidadDestinoByUnidadOrigen = async (idUnidadOrigen) => {
+const getConversion = async (idUnidadOrigen) => {
 	try {
 
 		let query = ` SELECT * FROM conversiones WHERE idUnidadOrigen = '${idUnidadOrigen}' `;
@@ -27,8 +27,8 @@ const getUnidadDestinoByUnidadOrigen = async (idUnidadOrigen) => {
 		if (records.rows.length >= 1) {
 			let record = records.rows[0];
 
-			let ingrediente = new ConversionBuilder().buildWithRecord(record);
-			return ingrediente;
+			let conversion = new ConversionBuilder().buildWithRecord(record);
+			return conversion;
 		} else {
 			return null;
 		}
@@ -39,5 +39,5 @@ const getUnidadDestinoByUnidadOrigen = async (idUnidadOrigen) => {
 
 module.exports = {
 	getConversionById,
-	getUnidadDestinoByUnidadOrigen,
+	getConversion,
 };
