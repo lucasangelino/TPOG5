@@ -144,15 +144,32 @@ VALUES(996, 'Manteca');
 -- Unidades
 INSERT INTO unidades(idUnidad, descripcion) 
 OVERRIDING SYSTEM VALUE
-VALUES(1, 'gramo');
+VALUES(501, 'gr');
 
 INSERT INTO unidades(idUnidad, descripcion) 
 OVERRIDING SYSTEM VALUE
-VALUES(2, 'unidad');
+VALUES(502, 'unidad(es)');
 
 INSERT INTO unidades(idUnidad, descripcion) 
 OVERRIDING SYSTEM VALUE
-VALUES(3, 'cm3');
+VALUES(503, 'cm3');
+
+INSERT INTO unidades(idUnidad, descripcion) 
+OVERRIDING SYSTEM VALUE
+VALUES(504, 'kg');
+
+INSERT INTO unidades(idUnidad, descripcion) 
+OVERRIDING SYSTEM VALUE
+VALUES(505, 'lt');
+
+-- Conversiones
+INSERT INTO conversiones(idConversion, idUnidadOrigen, idUnidadDestino, factorConversiones) 
+OVERRIDING SYSTEM VALUE
+VALUES(101, 504, 501, 1000);
+
+INSERT INTO conversiones(idConversion, idUnidadOrigen, idUnidadDestino, factorConversiones) 
+OVERRIDING SYSTEM VALUE
+VALUES(102, 505, 503, 1000);
 
 
 -- Spaghettis con Pesto
@@ -161,19 +178,19 @@ VALUES(1, 'Spaghetti con pesto', 'Spaghettis con pesto', '', 1, 1, 881, 5, 499, 
 
 INSERT INTO utilizados(idUtilizado, idReceta, idIngrediente, cantidad, idUnidad, observaciones) 
 OVERRIDING SYSTEM VALUE
-VALUES(9991, 1, 991, 100, 1, '100 gramos de Spaghettis Spaghetti');
+VALUES(9991, 1, 991, 100, 501, '100 gramos de Spaghettis Spaghetti');
 
 INSERT INTO utilizados(idUtilizado, idReceta, idIngrediente, cantidad, idUnidad, observaciones) 
 OVERRIDING SYSTEM VALUE
-VALUES(9992, 1, 995, 20, 1, '20 gramos de Pesto');
+VALUES(9992, 1, 995, 20, 501, '20 gramos de Pesto');
 
 INSERT INTO utilizados(idUtilizado, idReceta, idIngrediente, cantidad, idUnidad, observaciones) 
 OVERRIDING SYSTEM VALUE
-VALUES(9993, 1, 993, 500, 3, '500 cm3 de agua hirviendo');
+VALUES(9993, 1, 993, 500, 503, '500 cm3 de agua hirviendo');
 
 INSERT INTO utilizados(idUtilizado, idReceta, idIngrediente, cantidad, idUnidad, observaciones) 
 OVERRIDING SYSTEM VALUE
-VALUES(9994, 1, 994, 50, 1, '50 gramos de queso en hebras');
+VALUES(9994, 1, 994, 50, 501, '50 gramos de queso en hebras');
 
 
 -- Spaghettis con Fileto
@@ -182,19 +199,19 @@ VALUES(1, 'Spaghetti con Fileto', 'Spaghettis con Fileto', '', 1, 1, 881, 5, 500
 
 INSERT INTO utilizados(idUtilizado, idReceta, idIngrediente, cantidad, idUnidad, observaciones) 
 OVERRIDING SYSTEM VALUE
-VALUES(9995, 2, 991, 100, 1, '100 gramos de Spaghettis Spaghetti');
+VALUES(9995, 2, 991, 100, 501, '100 gramos de Spaghettis Spaghetti');
 
 INSERT INTO utilizados(idUtilizado, idReceta, idIngrediente, cantidad, idUnidad, observaciones) 
 OVERRIDING SYSTEM VALUE
-VALUES(9996, 2, 992, 2, 2, '2 unidades de tomate');
+VALUES(9996, 2, 992, 2, 502, '2 unidades de tomate');
 
 INSERT INTO utilizados(idUtilizado, idReceta, idIngrediente, cantidad, idUnidad, observaciones) 
 OVERRIDING SYSTEM VALUE
-VALUES(9997, 2, 993, 500, 3, '500 cm3 de agua hirviendo');
+VALUES(9997, 2, 993, 500, 503, '500 cm3 de agua hirviendo');
 
 INSERT INTO utilizados(idUtilizado, idReceta, idIngrediente, cantidad, idUnidad, observaciones) 
 OVERRIDING SYSTEM VALUE
-VALUES(9998, 2, 996, 50, 1, '50 gramos de manteca');
+VALUES(9998, 2, 996, 50, 501, '50 gramos de manteca');
 
 -- Sorrentinos de Ricota
 INSERT INTO recetas(idusuario, nombre, descripcion,foto,porciones,cantidadPersonas,idTipo, rating, positiveCount, negativeCount) 

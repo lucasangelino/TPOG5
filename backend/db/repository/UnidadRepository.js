@@ -36,7 +36,28 @@ const getUnidadById = async (idUnidad) => {
 	}
 };
 
-const getUnidadByDescripcion = async ({descripcion}) => {
+const getUnidadesConvertibles = async (idUnidadOrigen) => {
+	try {
+
+		let query = ` SELECT * FROM conversiones WHERE idUnidadOrigen = '${idUnidadOrigen}' `;
+		const records = await pg_pool.query(query);
+
+		let unidades = [];
+		for(const record of records.rows) {
+
+			let unidadDestino = await getUnidadById(record.idunidaddestino);
+			if(unidadDestino) {
+				unidades.push(unidadDestino);
+			}
+		}
+
+		return unidades;
+	} catch (error) {
+		return [];
+	}
+};
+
+const getUnidadByDescripcion = async (descripcion) => {
 	try {
 
 		let query = ` SELECT * FROM unidades WHERE descripcion = '${descripcion}' `;
@@ -57,5 +78,6 @@ const getUnidadByDescripcion = async ({descripcion}) => {
 module.exports = {
 	getUnidades,
 	getUnidadById,
+	getUnidadesConvertibles,
 	getUnidadByDescripcion,
 };

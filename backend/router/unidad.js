@@ -9,4 +9,19 @@ router.get(
     unidadCtrl.getUnidades
 );
 
+router.get(
+    "/:id",
+    unidadCtrl.getUnidadById
+);
+
+router.get(
+    "/:id/convertibles",
+    unidadCtrl.getUnidadesConvertibles
+);
+
+router.get(
+    "/conversion",
+    unidadCtrl.conversion
+);
+
 module.exports = router;
