@@ -3,8 +3,7 @@ const RecetaBuilder = require("../../helpers/builder/RecetaBuilder.js");
 const RecetaCompletaBuilder = require("../../helpers/builder/RecetaCompletaBuilder.js");
 const TipoRepository = require('./TipoRepository.js')
 const PasoRepository = require('./PasoRepository')
-const MultimediaRepository = require('./MultimediaRepository');
-const PasoCompletoBuilder = require('../../helpers/builder/PasoCompletoBuilder.js');
+const UtilizadoRepository = require('./UtilizadoRepository');
 
 /**
 * Creates User with the given data
@@ -79,10 +78,14 @@ const getRecetas = async ({receta_id, usuario_id, nombre, tipo_receta, rating_mi
 			// obtenemos los pasos asociados a la receta
 			let pasos = await PasoRepository.getPasosByIdReceta(receta.idReceta);
 
+			// obtenemos los ingredientes utilizados asociados a la receta
+			let ingredientes = await UtilizadoRepository.getUtilizadosByIdReceta(receta.idReceta);
+
 			// construimos VO de receta completa
 			let recetaCompleta = new RecetaCompletaBuilder()
 			.receta(receta)
 			.pasos(pasos)
+			.ingredientes(ingredientes)
 			.build();
 
 			result.push(recetaCompleta);

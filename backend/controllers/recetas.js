@@ -18,11 +18,15 @@ const getRecetas = async (req, res) => {
     var limit = req.query.limit ? req.query.limit : 10;
 
     const body = req.body;
+    
+    let total = await RecetaRepository.getRecetas(body);
+
     body.skip = skip;
     body.limit = limit;
 
     let clases = await RecetaRepository.getRecetas(body);
-    return res.status(200).json({ status: "ok", data: clases });
+
+    return res.status(200).json({ status: "ok", count: total.length, data: clases });
   } catch (e) {
     return res.status(400).json({ status: "err", message: e.message });
   }

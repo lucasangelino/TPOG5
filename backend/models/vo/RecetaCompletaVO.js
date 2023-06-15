@@ -13,7 +13,8 @@ class RecetaCompletaVO {
 		this.positiveCount = 0;
 		this.negativeCount = 0;
 		this.estado = 0;
-		this.pasos = 0;
+		this.pasos = [];
+		this.ingredientes = []
 	}
 
 	getIdReceta() {
@@ -66,6 +67,10 @@ class RecetaCompletaVO {
 
 	getPasos() {
 		return this.pasos;
+	}
+
+	getIngredientes() {
+		return this.ingredientes;
 	}
 }
 

@@ -42,8 +42,7 @@ class UtilizadoBuilder {
   }
 
   buildWithRecord(record) {
-
-    return new UtilizadoBuilder()
+    return this
       .idUtilizado(record.idutilizado)
       .idReceta(record.idreceta)
       .idIngrediente(record.idingrediente)

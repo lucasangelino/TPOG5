@@ -26,6 +26,11 @@ class RecetaCompletaBuilder {
     this.entity.pasos = pasos;
     return this;
   } 
+
+  ingredientes(ingredientes) {
+    this.entity.ingredientes = ingredientes;
+    return this;
+  }
   
   build() {
     return this.entity;

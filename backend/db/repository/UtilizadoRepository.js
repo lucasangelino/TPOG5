@@ -1,7 +1,6 @@
 const { pg_pool } = require('../database')
 const UtilizadoBuilder = require("../../helpers/builder/UtilizadoBuilder.js");
 
-
 const addUtilizado = async ({idReceta, idIngrediente, cantidad, idUnidad, observaciones}) => {
 	try {
 
@@ -39,6 +38,21 @@ const getUtilizadoById = async (idUtilizado) => {
 	}
 };
 
+const getUtilizadosByIdReceta = async (idReceta) => {
+	try {
+
+		let query = ` SELECT * FROM utilizados WHERE idReceta = '${idReceta}' `;
+		const records = await pg_pool.query(query);
+		let utilizados = []
+		for(const record of records.rows) {
+			utilizados.push(new UtilizadoBuilder().buildWithRecord(record))
+		}
+		return utilizados;
+	} catch (error) {
+		return [];
+	}
+};
+
 const updateUtilizado = async ({idUtilizado, idIngrediente, idUnidad, cantidad, observaciones}) => {
 	try {
 
@@ -54,7 +68,6 @@ const updateUtilizado = async ({idUtilizado, idIngrediente, idUnidad, cantidad, 
 		return false;
 	}
 };
-
 
 const deleteUtilizado = async (idUtilizado) => {
 	try {
@@ -75,6 +88,7 @@ const deleteUtilizado = async (idUtilizado) => {
 module.exports = {
 	addUtilizado,
 	getUtilizadoById,
+	getUtilizadosByIdReceta,
 	updateUtilizado,
 	deleteUtilizado,
 };
