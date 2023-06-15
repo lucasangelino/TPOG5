@@ -33,26 +33,22 @@ const signup = async (req, res = response) => {
         });
     }
 
-    if (password !== repeatPassword) {
-      return res.status(400).json({ err: "Las contrasenas no coinciden" });
-    }
-
     // buscamos por mail
     let user = await UserRepository.getUserByMail(mail);
     if (user != null) {
-      return res.status(400).json({
-        ok: false,
-        message: "User already exist",
-      });
+        return res.status(400).json({
+            ok: false,
+            message: "El usuario ya existe",
+        });
     }
 
     // buscamos por alias ahora
     user = await UserRepository.getUserByNickname(nickname);
     if (user != null) {
-      return res.status(400).json({
-        ok: false,
-        message: "User already exist",
-      });
+        return res.status(400).json({
+            ok: false,
+            message: "El usuario ya existe",
+        });
     }
 
     let hash = await bcrypt.hash(password, constants.SALT_ROUNDS);

@@ -360,7 +360,7 @@ const addRecetaStep = async (req, res) => {
     }
 
     let paso = await PasoRepository.addPaso(body);
-    return res.status(401).json({
+    return res.status(200).json({
       status: "ok",
       data: paso,
     });
