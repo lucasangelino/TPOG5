@@ -152,7 +152,7 @@ const login = async (req, res = response) => {
     const usuario = await UserRepository.getUserByMail(mail);
     if (!usuario) {
       return res.status(400).json({
-        ok: false,
+        status: "error",
         message: "User or password incorrect",
       });
     }
@@ -160,7 +160,7 @@ const login = async (req, res = response) => {
     const validPassword = bcrypt.compareSync(password, usuario.getPassword());
     if (!validPassword || usuario.getHabilitado() != "Si") {
       return res.status(400).json({
-        ok: false,
+        status: "error",
         message: "User or password incorrect",
       });
     }

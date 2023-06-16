@@ -14,7 +14,7 @@ const getRecetas = async ({receta_id, usuario_id, nombre, tipo_receta, rating_mi
 	try {
 
 		// Se filtra por los campos recibidos en el body.
-		let query = "SELECT r.* FROM recetas r WHERE r.estado = 1 ";		
+		let query = "SELECT r.* FROM recetas r WHERE r.estado = 'aprobada' ";		
 		
 		if (receta_id) {
 			query = query + ` AND r.idReceta = '${receta_id}' `
@@ -162,11 +162,11 @@ const updateReceta = async (body) => {
 	}
 };
 
-// Elimina receta existente
-const deleteReceta = async ({idReceta}) => {
+// rechaza receta existente
+const rechazarReceta = async ({idReceta}) => {
 	try {
 
-		let query = ` UPDATE recetas SET estado = 0 WHERE idReceta = '${idReceta}' `;
+		let query = ` UPDATE recetas SET estado = 'rechazada' WHERE idReceta = '${idReceta}' `;
 		const records = await pg_pool.query(query);
 		if (records.rowCount >= 1) {
 			return true
@@ -183,5 +183,5 @@ module.exports = {
 	getRecetas,
 	addReceta,
 	updateReceta,
-	deleteReceta,
+	rechazarReceta,
 };

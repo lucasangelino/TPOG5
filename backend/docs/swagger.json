@@ -368,12 +368,12 @@
           }
         }
       },
-      "/receta/review": {
+      "/receta/calificacion": {
         "post": {
           "tags": [
             "Recetas"
           ],
-          "summary": "/receta/review",
+          "summary": "/receta/calificacion",
           "requestBody": {
             "content": {
               "*/*": {
@@ -415,7 +415,7 @@
           "tags": [
             "Recetas"
           ],
-          "summary": "/receta/review",
+          "summary": "/receta/calificacion",
           "requestBody": {
             "content": {
               "*/*": {

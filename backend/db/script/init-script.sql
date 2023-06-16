@@ -30,10 +30,10 @@ CREATE TABLE recetas(
 	porciones int,
 	cantidadPersonas int,
 	idTipo int,
-	rating int default 0,
+	rating float default 0,
 	positiveCount int default 0,
 	negativeCount int default 0,
-	estado int default 1,
+	estado VARCHAR(10) default 'enviada' CONSTRAINT chk_estado CHECK (estado in ('enviada','aprobada','rechazada')),
 	CONSTRAINT fk_recetas_usuarios foreign key (idusuario) references usuarios,
 	CONSTRAINT fk_recetas_tipos foreign key (idTipo) references tipos
 );
@@ -66,6 +66,7 @@ CREATE TABLE calificaciones(
 	idReceta int,
 	calificacion int,
 	comentarios VARCHAR(500),
+	estado VARCHAR(10) default 'enviada' CONSTRAINT chk_estado CHECK (estado in ('enviada','aprobada','rechazada')),
 	CONSTRAINT fk_calificaciones_usuarios foreign key (idusuario) references usuarios,
 	CONSTRAINT fk_calificaciones_recetas foreign key (idReceta) references recetas
 );
@@ -173,8 +174,8 @@ VALUES(102, 505, 503, 1000);
 
 
 -- Spaghettis con Pesto
-INSERT INTO recetas(idusuario, nombre, descripcion,foto,porciones,cantidadPersonas,idTipo, rating, positiveCount, negativeCount) 
-VALUES(1, 'Spaghetti con pesto', 'Spaghettis con pesto', '', 1, 1, 881, 5, 499, 0);
+INSERT INTO recetas(idusuario, nombre, descripcion,foto,porciones,cantidadPersonas,idTipo, rating, positiveCount, negativeCount, estado)  
+VALUES(1, 'Spaghetti con pesto', 'Spaghettis con pesto', '', 1, 1, 881, 5, 499, 0, 'aprobada');
 
 INSERT INTO utilizados(idUtilizado, idReceta, idIngrediente, cantidad, idUnidad, observaciones) 
 OVERRIDING SYSTEM VALUE
@@ -194,8 +195,8 @@ VALUES(9994, 1, 994, 50, 501, '50 gramos de queso en hebras');
 
 
 -- Spaghettis con Fileto
-INSERT INTO recetas(idusuario, nombre, descripcion,foto,porciones,cantidadPersonas,idTipo, rating, positiveCount, negativeCount) 
-VALUES(1, 'Spaghetti con Fileto', 'Spaghettis con Fileto', '', 1, 1, 881, 5, 500, 0);
+INSERT INTO recetas(idusuario, nombre, descripcion,foto,porciones,cantidadPersonas,idTipo, rating, positiveCount, negativeCount, estado) 
+VALUES(1, 'Spaghetti con Fileto', 'Spaghettis con Fileto', '', 1, 1, 881, 5, 500, 0, 'aprobada');
 
 INSERT INTO utilizados(idUtilizado, idReceta, idIngrediente, cantidad, idUnidad, observaciones) 
 OVERRIDING SYSTEM VALUE
@@ -214,35 +215,35 @@ OVERRIDING SYSTEM VALUE
 VALUES(9998, 2, 996, 50, 501, '50 gramos de manteca');
 
 -- Sorrentinos de Ricota
-INSERT INTO recetas(idusuario, nombre, descripcion,foto,porciones,cantidadPersonas,idTipo, rating, positiveCount, negativeCount) 
-VALUES(1, 'Sorrentinos de Ricota', 'Sorrentinos de Ricota', '', 1, 1, 881, 5, 200, 0);
+INSERT INTO recetas(idusuario, nombre, descripcion,foto,porciones,cantidadPersonas,idTipo, rating, positiveCount, negativeCount, estado) 
+VALUES(1, 'Sorrentinos de Ricota', 'Sorrentinos de Ricota', '', 1, 1, 881, 5, 200, 0, 'aprobada');
 
 -- Sorrentinos de Verdura
-INSERT INTO recetas(idusuario, nombre, descripcion,foto,porciones,cantidadPersonas,idTipo) 
-VALUES(1, 'Sorrentinos de Verdura', 'Sorrentinos de Verdura', '', 1, 1, 881);
+INSERT INTO recetas(idusuario, nombre, descripcion,foto,porciones,cantidadPersonas,idTipo, estado) 
+VALUES(1, 'Sorrentinos de Verdura', 'Sorrentinos de Verdura', '', 1, 1, 881, 'aprobada');
 
 -- Sorrentinos de Salmon
-INSERT INTO recetas(idusuario, nombre, descripcion,foto,porciones,cantidadPersonas,idTipo) 
-VALUES(1, 'Sorrentinos de Salmon', 'Sorrentinos de Salmon', '', 1, 1, 881);
+INSERT INTO recetas(idusuario, nombre, descripcion,foto,porciones,cantidadPersonas,idTipo, estado) 
+VALUES(1, 'Sorrentinos de Salmon', 'Sorrentinos de Salmon', '', 1, 1, 881, 'aprobada');
 
 -- Macarrones con Bolognesa
-INSERT INTO recetas(idusuario, nombre, descripcion,foto,porciones,cantidadPersonas,idTipo) 
-VALUES(1, 'Macarrones con Bolognesa', 'Macarrones con Bolognesa', '', 1, 1, 881);
+INSERT INTO recetas(idusuario, nombre, descripcion,foto,porciones,cantidadPersonas,idTipo, estado)  
+VALUES(1, 'Macarrones con Bolognesa', 'Macarrones con Bolognesa', '', 1, 1, 881, 'aprobada');
 
 -- Macarrones con Queso
-INSERT INTO recetas(idusuario, nombre, descripcion,foto,porciones,cantidadPersonas,idTipo) 
-VALUES(1, 'Macarrones con Queso', 'Macarrones con Queso', '', 1, 1, 881);
+INSERT INTO recetas(idusuario, nombre, descripcion,foto,porciones,cantidadPersonas,idTipo, estado)  
+VALUES(1, 'Macarrones con Queso', 'Macarrones con Queso', '', 1, 1, 881, 'aprobada');
 
 -- Canelones
-INSERT INTO recetas(idusuario, nombre, descripcion,foto,porciones,cantidadPersonas,idTipo) 
-VALUES(1, 'Canelones', 'Canelones', '', 1, 1, 881);
+INSERT INTO recetas(idusuario, nombre, descripcion,foto,porciones,cantidadPersonas,idTipo, estado)  
+VALUES(1, 'Canelones', 'Canelones', '', 1, 1, 881, 'aprobada');
 
--- Tallarines
-INSERT INTO recetas(idusuario, nombre, descripcion,foto,porciones,cantidadPersonas,idTipo) 
+-- Tallarines (estado=enviada)
+INSERT INTO recetas(idusuario, nombre, descripcion,foto,porciones,cantidadPersonas,idTipo)  
 VALUES(1, 'Tallarines', 'Tallarines', '', 1, 1, 881);
 
--- Lasagna
-INSERT INTO recetas(idusuario, nombre, descripcion,foto,porciones,cantidadPersonas,idTipo) 
+-- Lasagna (estado=enviada)
+INSERT INTO recetas(idusuario, nombre, descripcion,foto,porciones,cantidadPersonas,idTipo)  
 VALUES(1, 'Lasagna', 'Lasagna', '', 1, 1, 881);
 
 

@@ -8,7 +8,7 @@ const TipoRepository = require("../db/repository/TipoRepository.js");
 const MultimediaRepository = require("../db/repository/MultimediaRepository.js");
 const UnidadRepository = require("../db/repository/UnidadRepository.js");
 const UtilizadoRepository = require("../db/repository/UtilizadoRepository.js");
-const Utilizado = require("../models/Utilizado");
+const CalificacionRepository = require("../db/repository/CalificacionRepository.js");
 
 // Metodo general que es utilizado en dos endpoints distintos ya que es configurable el metodo de ordenamiento, por cuales campos filtrar
 // y el paginado que se desea.
@@ -24,9 +24,9 @@ const getRecetas = async (req, res) => {
     body.skip = skip;
     body.limit = limit;
 
-    let clases = await RecetaRepository.getRecetas(body);
+    let recetas = await RecetaRepository.getRecetas(body);
 
-    return res.status(200).json({ status: "ok", count: total.length, data: clases });
+    return res.status(200).json({ status: "ok", count: total.length, data: recetas });
   } catch (e) {
     return res.status(400).json({ status: "err", message: e.message });
   }
@@ -104,8 +104,8 @@ const updateReceta = async (req, res) => {
   }
 };
 
-// Elimina unastente receta exi
-const deleteReceta = async (req, res) => {
+// rechaza receta existente, no aparecera en resultados de busqueda
+const rechazarReceta = async (req, res) => {
   const body = req.body;
   body.idUsuario = req.idUsuario;
 
@@ -122,7 +122,7 @@ const deleteReceta = async (req, res) => {
       });
     }
 
-    let result = await RecetaRepository.deleteReceta(body);
+    let result = await RecetaRepository.rechazarReceta(body);
     if (!result) {
       return res.status(200).json({
         status: "error",
@@ -174,7 +174,7 @@ const addRecetaIngrediente = async (req, res) => {
     let receta = await RecetaRepository.getRecetas({
       receta_id: body.idReceta,
     });
-    if (!receta || receta.length < 1) {
+    if (receta.length < 1) {
       return res.status(400).json({
         status: "error",
         message: "No existe la receta",
@@ -314,8 +314,6 @@ const deleteRecetaIngrediente = async (req, res) => {
 };
 
 
-
-
 // Obtiene Paso Existente
 const getRecetaStepById = async (req, res) => {
   const body = req.body;
@@ -349,10 +347,10 @@ const addRecetaStep = async (req, res) => {
    // TODO validar ownership de la receta para el usuario
 
   try {
-    let receta = await RecetaRepository.getRecetas({
+    let recetas = await RecetaRepository.getRecetas({
       receta_id: body.idReceta,
     });
-    if (!receta) {
+    if (recetas.length < 1) {
       return res.status(401).json({
         status: "error",
         message: "No existe la receta a la cual agregar el paso",
@@ -517,11 +515,101 @@ const deleteStepMultimedia = async (req, res) => {
   }
 };
 
+// agrega calificacion a receta, o actualiza calificacion si ya existe
+const addCalificacion = async (req, res) => {
+  try {
+    const body = req.body;
+    body.idUsuario = req.idUsuario;
+
+    // Validar que la receta existe
+    var recetas = await RecetaRepository.getRecetas({receta_id: body.idReceta});
+    if (recetas.length < 1) {
+      return res.status(404).json({
+        status: "error",
+        message: "la receta no existe",
+      });
+    }
+    let receta = recetas[0];
+
+    let cantNeg = receta.getNegativeCount();
+    let cantPos = receta.getPositiveCount();
+
+    // validar que no haya una calificacion ya para el que envia esta nueva calificacion
+    let calificacion = await CalificacionRepository.getCalificacionByIdRecetaAndIdUsuario(body.idReceta, body.idUsuario);
+
+    // si ya existe
+    if(calificacion) {
+
+      // recalculamos calificacion de la receta en base a la nueva
+      if (body.calificacion > 0 ) {
+        if(calificacion.calificacion < 0) {
+          cantPos = cantPos + 1;
+          cantNeg = cantNeg - 1;
+        } 
+      } else {
+        if(calificacion.calificacion > 0) {
+          cantPos = cantPos - 1;
+          cantNeg = cantNeg + 1;
+        } 
+      }
+
+      // se actualiza calificacion existente
+      // debe ser enviada para evitar que el usuario
+      // cambie la calificacion sin que la empresa la pueda volver a aceptar
+      calificacion = await CalificacionRepository.updateCalificacion(calificacion.getIdCalificacion(),
+        "enviada", body.calificacion, body.comentarios);
+    } else {
+
+      // no existe calificacion existente, creamos una
+      calificacion = await CalificacionRepository.addCalificacion(body);
+      if (!calificacion) {
+        return res.status(500).json({
+          status: "error",
+          message: "Error inesperado al agregar la calificacion"
+        });
+      }
+
+      if (body.calificacion > 0) {
+        cantPos = cantPos + 1;
+      } else {
+        cantNeg = cantNeg + 1;
+      }
+    }
+
+    // 0 ~ 5 stars
+    let totalCount = cantPos + cantNeg;
+    let rating = ((100 * cantPos) / (totalCount))/20;
+    
+    // actualizamos el calculo de calificacion en receta
+    let newReceta = await RecetaRepository.updateReceta({idReceta: body.idReceta, positiveCount: cantPos, negativeCount: cantNeg, rating: rating})
+    return res.status(200).json({
+      status: "ok",
+      data: {
+        calificacion: calificacion,
+        receta: newReceta,
+      },
+    });
+  } catch (e) {
+    return res.status(e.statusCode).json({ status: e.name, msg: e.message });
+  }
+};
+
+
+const patchCalificacion = async (req, res) => {
+  try {
+   return null
+  } catch (e) {
+    return res
+      .status(e.statusCode)
+      .json({ status: e.name, message: e.message });
+  }
+};
+
 module.exports = {
   getRecetas,
   addReceta,
   updateReceta,
-  deleteReceta,
+  rechazarReceta,
   addRecetaIngrediente,
   getRecetaIngrediente,
   updateRecetaIngrediente,
@@ -532,5 +620,7 @@ module.exports = {
   deleteRecetaStep,
   addStepMultimedia,
   getStepMultimediaById,
-  deleteStepMultimedia
+  deleteStepMultimedia,
+  addCalificacion,
+  patchCalificacion,
 };

@@ -1,4 +1,4 @@
-const { check } = require("express-validator");
+const { check, body } = require("express-validator");
 const { validateField } = require("../middlewares/fieldValidator.js");
 const decodeUserFromToken =  require("../middlewares/auth.js").decodeUserFromToken;
 const checkAuth  = require("../middlewares/auth.js").checkAuth;
@@ -70,7 +70,7 @@ router.delete("/",
   validateField,
 ],
 checkAuth,
-recetasCtrl.deleteReceta);
+recetasCtrl.rechazarReceta);
 
 // agregar ingrediente a receta
 router.post("/ingrediente", 
@@ -149,8 +149,6 @@ checkAuth,
 recetasCtrl.deleteRecetaStep);
 
 
-
-
 // agregar contenido multimedia a paso de receta
 router.post("/step/multimedia", 
 [
@@ -171,5 +169,25 @@ router.delete("/step/multimedia",
 ],
 checkAuth,
 recetasCtrl.deleteStepMultimedia);
+
+// agregar calificacion
+router.post(
+  "/calificacion",
+  checkAuth,
+  body("idReceta").exists().notEmpty(),
+  body("calificacion").exists().notEmpty(),
+  body("comentarios").exists().notEmpty(),
+  recetasCtrl.addCalificacion
+);
+
+router.patch(
+  "/calificacion",
+  checkAuth,
+  body("idReceta").exists().notEmpty(),
+  body("idCalificacion").exists().notEmpty(),
+  body("nuevoEstado").exists().notEmpty(),
+  body("razon").exists().notEmpty(),
+  recetasCtrl.patchCalificacion
+);
 
 module.exports = router;
